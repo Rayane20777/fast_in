@@ -1,4 +1,4 @@
-package com.example.fast_in;
+package com.fast_in;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
