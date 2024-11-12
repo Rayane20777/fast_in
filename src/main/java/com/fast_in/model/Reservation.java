@@ -52,6 +52,6 @@ public class Reservation {
     private Driver chauffeur;
 
     @ManyToOne
-    @JoinColumn(name = "vehicule_id", nullable = false)
-    private Vehicle vehicule;
+    @JoinColumn(name = "vehicle_id", nullable = false)
+    private Vehicle vehicle;
 }

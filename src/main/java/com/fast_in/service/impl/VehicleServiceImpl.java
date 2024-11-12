@@ -3,10 +3,11 @@ package com.fast_in.service.impl;
 import com.fast_in.dto.request.VehicleRequest;
 import com.fast_in.dto.response.VehicleResponse;
 import com.fast_in.exception.ResourceNotFoundException;
+import com.fast_in.mapper.VehicleMapper;
 import com.fast_in.model.Vehicle;
 import com.fast_in.repository.VehicleRepository;
 import com.fast_in.service.VehicleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,40 +17,28 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class VehicleServiceImpl  implements VehicleService {
-    @Autowired
-    private VehicleRepository vehicleRepository;
-        @Override
-    public boolean isAvailable(Long vehicleId, LocalDateTime dateTime) {
-        // Check if vehicle exists
-        if (!vehicleRepository.existsById(vehicleId)) {
-            throw new ResourceNotFoundException("Vehicle not found with id: " + vehicleId);
-        }
+@RequiredArgsConstructor
+public class VehicleServiceImpl implements VehicleService {
 
-        // Check vehicle's availability
-        return !vehicleRepository.hasConflictingReservation(vehicleId, dateTime);
-    }
+    private final VehicleRepository vehicleRepository;
+    private final VehicleMapper vehicleMapper;
+
     @Override
     public List<VehicleResponse> findAll() {
         return vehicleRepository.findAll().stream()
-                .map(this::convertToResponse)
+                .map(vehicleMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Optional<VehicleResponse> findById(UUID id) {
-        return vehicleRepository.findById(id).map(this::convertToResponse);
+        return vehicleRepository.findById(id).map(vehicleMapper::toResponse);
     }
 
     @Override
     public VehicleResponse save(VehicleRequest vehicleRequest) {
-        Vehicle vehicle = new Vehicle();
-        vehicle.setModel(vehicleRequest.getModel());
-        vehicle.setRegistrationNumber(vehicleRequest.getRegistrationNumber());
-        vehicle.setMileage(vehicleRequest.getMileage());
-        vehicle.setStatus(vehicleRequest.getStatus());
-        vehicle.setType(vehicleRequest.getType());
-        return convertToResponse(vehicleRepository.save(vehicle));
+        Vehicle vehicle = vehicleMapper.toEntity(vehicleRequest);
+        return vehicleMapper.toResponse(vehicleRepository.save(vehicle));
     }
 
     @Override
@@ -57,14 +46,13 @@ public class VehicleServiceImpl  implements VehicleService {
         vehicleRepository.deleteById(id);
     }
 
-    private VehicleResponse convertToResponse(Vehicle vehicle) {
-        VehicleResponse response = new VehicleResponse();
-        response.setId(vehicle.getId());
-        response.setModel(vehicle.getModel());
-        response.setRegistrationNumber(vehicle.getRegistrationNumber());
-        response.setMileage(vehicle.getMileage());
-        response.setStatus(vehicle.getStatus());
-        response.setType(vehicle.getType());
-        return response;
+    public boolean isAvailable(UUID vehicleId, LocalDateTime dateTime) {
+        // Check if vehicle exists
+        if (!vehicleRepository.existsById(vehicleId)) {
+            throw new ResourceNotFoundException("Vehicle not found with id: " + vehicleId);
+        }
+
+        // Check vehicle's availability
+        return !vehicleRepository.hasConflictingReservation(vehicleId, dateTime);
     }
 }

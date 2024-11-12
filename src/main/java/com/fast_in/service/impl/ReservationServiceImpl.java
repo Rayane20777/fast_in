@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -102,7 +103,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Page<ReservationResponse> getReservationsByVehicle(Long vehiculeId, Pageable pageable) {
+    public Page<ReservationResponse> getReservationsByVehicle(UUID vehiculeId, Pageable pageable) {
         return reservationRepository.findByVehiculeId(vehiculeId, pageable)
                 .map(reservationMapper::toResponse);
     }
@@ -183,7 +184,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public boolean checkVehicleAvailability(Long vehiculeId, LocalDateTime dateHeure) {
+    public boolean checkVehicleAvailability(UUID vehiculeId, LocalDateTime dateHeure) {
         if (reservationRepository.hasActiveReservations(vehiculeId)) {
             throw new IllegalStateException("Vehicle is not available at the requested time");
         }

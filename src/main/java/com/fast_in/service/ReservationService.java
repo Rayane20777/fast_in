@@ -2,6 +2,7 @@ package com.fast_in.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ public interface ReservationService {
     
     List<ReservationResponse> getReservationsByStatus(StatutReservation statut);
     Page<ReservationResponse> getReservationsByDriver(Long chauffeurId, Pageable pageable);
-    Page<ReservationResponse> getReservationsByVehicle(Long vehiculeId, Pageable pageable);
+    Page<ReservationResponse> getReservationsByVehicle(UUID vehiculeId, Pageable pageable);
     List<ReservationResponse> getReservationsBetweenDates(LocalDateTime debut, LocalDateTime fin);
     List<ReservationResponse> getReservationsByCity(String ville);
     
@@ -33,5 +34,5 @@ public interface ReservationService {
     ReservationResponse cancelReservation(Long id);
     ReservationResponse completeReservation(Long id);
     boolean checkDriverAvailability(Long chauffeurId, LocalDateTime dateHeure);
-    boolean checkVehicleAvailability(Long vehiculeId, LocalDateTime dateHeure);
+    boolean checkVehicleAvailability(UUID vehiculeId, LocalDateTime dateHeure);
 }
