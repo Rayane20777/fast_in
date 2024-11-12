@@ -1,4 +1,4 @@
-package com.fast_in.model;
+package com.fast_in.model.enums;
 
 public enum StatutReservation {
     CREATED,

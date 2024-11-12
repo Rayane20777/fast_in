@@ -1,6 +1,7 @@
 package com.fast_in.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -8,10 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.fast_in.model.enums.StatutReservation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,8 +26,8 @@ import lombok.NoArgsConstructor;
 public class Reservation {  
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(nullable = false)
     private LocalDateTime dateHeure;

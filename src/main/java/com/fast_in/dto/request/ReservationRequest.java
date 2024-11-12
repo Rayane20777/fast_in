@@ -1,6 +1,7 @@
 package com.fast_in.dto.request;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;     
@@ -30,5 +31,5 @@ public class ReservationRequest {
     private Long chauffeurId;
 
     @NotNull(message = "L'ID du véhicule est obligatoire")
-    private Long vehiculeId;
+    private UUID vehiculeId;
 }

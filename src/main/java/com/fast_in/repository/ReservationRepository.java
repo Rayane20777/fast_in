@@ -2,6 +2,7 @@ package com.fast_in.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fast_in.model.Reservation;
-import com.fast_in.model.StatutReservation;
+import com.fast_in.model.enums.StatutReservation;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
@@ -25,7 +26,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     Page<Reservation> findByChauffeurId(Long chauffeurId, Pageable pageable);
 
     // Find reservations by vehicle ID
-    Page<Reservation> findByVehiculeId(Long vehiculeId, Pageable pageable);
+    Page<Reservation> findByVehiculeId(UUID vehiculeId, Pageable pageable);
 
     // Find reservations between dates
     List<Reservation> findByDateHeureBetween(LocalDateTime debut, LocalDateTime fin);
@@ -72,5 +73,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
            "WHERE r.vehicule.id = :vehiculeId " +
            "AND r.statut IN ('CRÉÉE', 'CONFIRMÉE')")
-    boolean hasActiveReservations(@Param("vehiculeId") Long vehiculeId);
+    boolean hasActiveReservations(@Param("vehiculeId") UUID vehiculeId);
 }

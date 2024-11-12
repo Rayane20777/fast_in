@@ -16,19 +16,21 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class VehicleServiceImpl  implements VehicleService {
+public class VehicleServiceImpl implements VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
-        @Override
-    public boolean isAvailable(Long vehicleId, LocalDateTime dateTime) {
+
+    @Override
+    public boolean isAvailable(UUID vehicleId, LocalDateTime dateTime) {
         // Check if vehicle exists
         if (!vehicleRepository.existsById(vehicleId)) {
             throw new ResourceNotFoundException("Vehicle not found with id: " + vehicleId);
         }
 
         // Check vehicle's availability
-        return !vehicleRepository.hasConflictingReservation(vehicleId, dateTime);
+        return !vehicleRepository.hasConflictingReservations(vehicleId, dateTime);
     }
+
     @Override
     public List<VehicleResponse> findAll() {
         return vehicleRepository.findAll().stream()
