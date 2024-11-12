@@ -3,7 +3,7 @@ package com.fast_in.dto.response;
 import java.time.LocalDateTime;
 
 import com.fast_in.dto.common.AdresseDto;
-import com.fast_in.model.StatutReservation;
+import com.fast_in.model.enums.StatutReservation;
 
 import lombok.Data;
 // import com.fast_in.dto.common.DriverDto;

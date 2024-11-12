@@ -13,5 +13,5 @@ public interface VehicleService {
     Optional<VehicleResponse> findById(UUID id);
     VehicleResponse save(VehicleRequest vehicleRequest);
     void deleteById(UUID id);
-    boolean isAvailable(Long vehicleId, LocalDateTime dateTime);
+    boolean isAvailable(UUID vehicleId, LocalDateTime dateTime);
 }

@@ -6,7 +6,7 @@ import com.fast_in.exception.ReservationException;
 import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.mapper.ReservationMapper;
 import com.fast_in.model.Reservation;
-import com.fast_in.model.StatutReservation;
+import com.fast_in.model.enums.StatutReservation;
 import com.fast_in.repository.ReservationRepository;
 import com.fast_in.service.DriverService;
 import com.fast_in.service.ReservationService;
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +44,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationResponse createReservation(ReservationRequest request) {
         try {
             validator.validateCreation(request);
-            checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
+            // checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
             checkVehicleAvailability(request.getVehiculeId(), request.getDateHeure());
 
             Reservation reservation = reservationMapper.toEntity(request);
@@ -70,9 +71,9 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public ReservationResponse updateReservation(Long id, ReservationRequest request) {
         Reservation reservation = findReservationById(id);
-        validateReservationStatus(reservation, StatutReservation.CRÉÉE);
+        validateReservationStatus(reservation, StatutReservation.CREATED);
         
-        checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
+        // checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
         checkVehicleAvailability(request.getVehiculeId(), request.getDateHeure());
         
         reservationMapper.updateEntityFromRequest(request, reservation);
@@ -102,7 +103,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Page<ReservationResponse> getReservationsByVehicle(Long vehiculeId, Pageable pageable) {
+    public Page<ReservationResponse> getReservationsByVehicle(UUID vehiculeId, Pageable pageable) {
         return reservationRepository.findByVehiculeId(vehiculeId, pageable)
                 .map(reservationMapper::toResponse);
     }
@@ -169,21 +170,21 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationMapper.toResponse(reservationRepository.save(reservation));
     }
 
-    @Override
-    public boolean checkDriverAvailability(Long chauffeurId, LocalDateTime dateHeure) {
-        LocalDateTime endTime = dateHeure.plusHours(2); // Assuming 2-hour reservation duration
-        List<Reservation> overlapping = reservationRepository.findOverlappingReservations(
-            chauffeurId, dateHeure, endTime);
+    // @Override
+    // public boolean checkDriverAvailability(Long chauffeurId, LocalDateTime dateHeure) {
+    //     LocalDateTime endTime = dateHeure.plusHours(2); // Assuming 2-hour reservation duration
+    //     List<Reservation> overlapping = reservationRepository.findOverlappingReservations(
+    //         chauffeurId, dateHeure, endTime);
         
-        if (!overlapping.isEmpty()) {
-            throw new IllegalStateException("Driver is not available at the requested time");
-        }
+    //     if (!overlapping.isEmpty()) {
+    //         throw new IllegalStateException("Driver is not available at the requested time");
+    //     }
         
-        return driverService.isAvailable(chauffeurId, dateHeure);
-    }
+    //     return driverService.isAvailable(chauffeurId, dateHeure);
+    // }
 
     @Override
-    public boolean checkVehicleAvailability(Long vehiculeId, LocalDateTime dateHeure) {
+    public boolean checkVehicleAvailability(UUID vehiculeId, LocalDateTime dateHeure) {
         if (reservationRepository.hasActiveReservations(vehiculeId)) {
             throw new IllegalStateException("Vehicle is not available at the requested time");
         }
