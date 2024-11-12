@@ -33,6 +33,6 @@ public interface ReservationService {
     ReservationResponse confirmReservation(Long id);
     ReservationResponse cancelReservation(Long id);
     ReservationResponse completeReservation(Long id);
-    // boolean checkDriverAvailability(Long chauffeurId, LocalDateTime dateHeure);
+    boolean checkDriverAvailability(Long chauffeurId, LocalDateTime dateHeure);
     boolean checkVehicleAvailability(UUID vehiculeId, LocalDateTime dateHeure);
 }

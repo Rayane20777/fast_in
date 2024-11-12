@@ -71,7 +71,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     // Check if a vehicle has active reservations
     @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
-           "WHERE r.vehicule.id = :vehiculeId " +
+           "WHERE r.vehicle.id = :vehiculeId " +
            "AND r.statut IN ('CRÉÉE', 'CONFIRMÉE')")
     boolean hasActiveReservations(@Param("vehiculeId") UUID vehiculeId);
 }
