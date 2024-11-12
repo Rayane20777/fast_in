@@ -44,7 +44,7 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationResponse createReservation(ReservationRequest request) {
         try {
             validator.validateCreation(request);
-            checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
+            // checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
             checkVehicleAvailability(request.getVehiculeId(), request.getDateHeure());
 
             Reservation reservation = reservationMapper.toEntity(request);
@@ -73,7 +73,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = findReservationById(id);
         validateReservationStatus(reservation, StatutReservation.CREATED);
         
-        checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
+        // checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
         checkVehicleAvailability(request.getVehiculeId(), request.getDateHeure());
         
         reservationMapper.updateEntityFromRequest(request, reservation);
@@ -170,18 +170,18 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationMapper.toResponse(reservationRepository.save(reservation));
     }
 
-    @Override
-    public boolean checkDriverAvailability(Long chauffeurId, LocalDateTime dateHeure) {
-        LocalDateTime endTime = dateHeure.plusHours(2); // Assuming 2-hour reservation duration
-        List<Reservation> overlapping = reservationRepository.findOverlappingReservations(
-            chauffeurId, dateHeure, endTime);
+    // @Override
+    // public boolean checkDriverAvailability(Long chauffeurId, LocalDateTime dateHeure) {
+    //     LocalDateTime endTime = dateHeure.plusHours(2); // Assuming 2-hour reservation duration
+    //     List<Reservation> overlapping = reservationRepository.findOverlappingReservations(
+    //         chauffeurId, dateHeure, endTime);
         
-        if (!overlapping.isEmpty()) {
-            throw new IllegalStateException("Driver is not available at the requested time");
-        }
+    //     if (!overlapping.isEmpty()) {
+    //         throw new IllegalStateException("Driver is not available at the requested time");
+    //     }
         
-        return driverService.isAvailable(chauffeurId, dateHeure);
-    }
+    //     return driverService.isAvailable(chauffeurId, dateHeure);
+    // }
 
     @Override
     public boolean checkVehicleAvailability(UUID vehiculeId, LocalDateTime dateHeure) {
