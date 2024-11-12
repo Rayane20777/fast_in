@@ -8,8 +8,10 @@ import com.fast_in.model.Vehicle;
 import com.fast_in.repository.VehicleRepository;
 import com.fast_in.service.VehicleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,6 +50,20 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleRepository.deleteById(id);
     }
 
+    @Override
+    public VehicleResponse update(UUID id, VehicleRequest vehicleRequest) {
+        Vehicle vehicle = vehicleRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle Not Found!"));
+
+        // Update the vehicle fields using the mapper
+        vehicleMapper.updateEntityFromRequest(vehicleRequest, vehicle);
+        
+        // Save the updated vehicle
+        return vehicleMapper.toResponse(vehicleRepository.save(vehicle));
+    }
+
+
+    @Override
     public boolean isAvailable(UUID vehicleId, LocalDateTime dateTime) {
         // Check if vehicle exists
         if (!vehicleRepository.existsById(vehicleId)) {
