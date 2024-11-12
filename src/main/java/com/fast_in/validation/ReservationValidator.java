@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import com.fast_in.dto.request.ReservationRequest;
 import com.fast_in.exception.ReservationException;
 import com.fast_in.model.Reservation;
-import com.fast_in.model.StatutReservation;
+import com.fast_in.model.enums.StatutReservation;
 
 @Component
 public class ReservationValidator {

@@ -6,7 +6,7 @@ import com.fast_in.exception.ReservationException;
 import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.mapper.ReservationMapper;
 import com.fast_in.model.Reservation;
-import com.fast_in.model.StatutReservation;
+import com.fast_in.model.enums.StatutReservation;
 import com.fast_in.repository.ReservationRepository;
 import com.fast_in.service.DriverService;
 import com.fast_in.service.ReservationService;
@@ -70,7 +70,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public ReservationResponse updateReservation(Long id, ReservationRequest request) {
         Reservation reservation = findReservationById(id);
-        validateReservationStatus(reservation, StatutReservation.CRÉÉE);
+        validateReservationStatus(reservation, StatutReservation.CREATED);
         
         checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
         checkVehicleAvailability(request.getVehiculeId(), request.getDateHeure());

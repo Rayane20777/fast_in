@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.fast_in.dto.request.ReservationRequest;
 import com.fast_in.dto.response.ReservationResponse;
-import com.fast_in.model.StatutReservation;
+import com.fast_in.model.enums.StatutReservation;
 
 public interface ReservationService {
     ReservationResponse createReservation(ReservationRequest request);

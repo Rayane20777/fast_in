@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fast_in.model.Reservation;
-import com.fast_in.model.StatutReservation;
+import com.fast_in.model.enums.StatutReservation;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
