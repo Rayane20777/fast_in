@@ -19,7 +19,7 @@ public interface ReservationService {
     void deleteReservation(Long id);
     
     List<ReservationResponse> getReservationsByStatus(StatutReservation statut);
-    Page<ReservationResponse> getReservationsByDriver(Long chauffeurId, Pageable pageable);
+    // Page<ReservationResponse> getReservationsByDriver(UUID driverId, Pageable pageable);
     Page<ReservationResponse> getReservationsByVehicle(UUID vehiculeId, Pageable pageable);
     List<ReservationResponse> getReservationsBetweenDates(LocalDateTime debut, LocalDateTime fin);
     List<ReservationResponse> getReservationsByCity(String ville);
@@ -33,6 +33,6 @@ public interface ReservationService {
     ReservationResponse confirmReservation(Long id);
     ReservationResponse cancelReservation(Long id);
     ReservationResponse completeReservation(Long id);
-    // boolean checkDriverAvailability(Long chauffeurId, LocalDateTime dateHeure);
+    // boolean checkDriverAvailability(Long driverId, LocalDateTime dateHeure);
     boolean checkVehicleAvailability(UUID vehiculeId, LocalDateTime dateHeure);
 }
