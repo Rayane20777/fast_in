@@ -1,13 +1,15 @@
-package com.fast_in.service;
+package com.fast_in.service.impl;
 
 import com.fast_in.dto.request.VehicleRequest;
 import com.fast_in.dto.response.VehicleResponse;
+import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.model.Vehicle;
 import com.fast_in.repository.VehicleRepository;
-import com.fast_in.service.Interface.VehicleService;
+import com.fast_in.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,7 +19,16 @@ import java.util.stream.Collectors;
 public class VehicleServiceImpl  implements VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
+        @Override
+    public boolean isAvailable(Long vehicleId, LocalDateTime dateTime) {
+        // Check if vehicle exists
+        if (!vehicleRepository.existsById(vehicleId)) {
+            throw new ResourceNotFoundException("Vehicle not found with id: " + vehicleId);
+        }
 
+        // Check vehicle's availability
+        return !vehicleRepository.hasConflictingReservation(vehicleId, dateTime);
+    }
     @Override
     public List<VehicleResponse> findAll() {
         return vehicleRepository.findAll().stream()
