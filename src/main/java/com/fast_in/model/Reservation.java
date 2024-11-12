@@ -3,7 +3,6 @@ package com.fast_in.model;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -54,20 +53,4 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "vehicule_id", nullable = false)
     private Vehicle vehicule;
-}
-
-@Embeddable
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class Adresse {
-    private String ville;
-    private String quartier;
-}
-
-enum StatutReservation {
-    CRÉÉE,
-    CONFIRMÉE,
-    TERMINÉE,
-    ANNULÉE
 }
