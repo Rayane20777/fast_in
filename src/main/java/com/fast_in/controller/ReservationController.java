@@ -67,18 +67,18 @@ public class ReservationController {
         return ResponseEntity.ok(reservationService.getReservationsByStatus(statut));
     }
 
-    @GetMapping("/driver/{chauffeurId}")
-    public ResponseEntity<Page<ReservationResponse>> getReservationsByDriver(
-            @PathVariable Long chauffeurId,
-            Pageable pageable) {
-        return ResponseEntity.ok(reservationService.getReservationsByDriver(chauffeurId, pageable));
-    }
+    // @GetMapping("/driver/{driverId}")
+    // public ResponseEntity<Page<ReservationResponse>> getReservationsByDriver(
+    //         @PathVariable Long driverId,
+    //         Pageable pageable) {
+    //     return ResponseEntity.ok(reservationService.getReservationsByDriver(driverId, pageable));
+    // }
 
-    @GetMapping("/vehicle/{vehiculeId}")
+    @GetMapping("/vehicle/{vehicleId}")
     public ResponseEntity<Page<ReservationResponse>> getReservationsByVehicle(
-            @PathVariable UUID vehiculeId,
+            @PathVariable UUID vehicleId,
             Pageable pageable) {
-        return ResponseEntity.ok(reservationService.getReservationsByVehicle(vehiculeId, pageable));
+        return ResponseEntity.ok(reservationService.getReservationsByVehicle(vehicleId, pageable));
     }
 
     @GetMapping("/dates")

@@ -17,7 +17,7 @@ public interface ReservationMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "prix", ignore = true)
     @Mapping(target = "statut", constant = "CRÉÉE")
-    @Mapping(target = "chauffeur.id", source = "chauffeurId")
+    @Mapping(target = "chauffeur.id", source = "driverId")
     @Mapping(target = "vehicule.id", source = "vehiculeId")
     Reservation toEntity(ReservationRequest request);
 

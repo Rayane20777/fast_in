@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.fast_in.dao.ReservationDao;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
+    private final ReservationDao reservationDao;
     private final ReservationMapper reservationMapper;
     private final ReservationValidator validator;
     private final DriverService driverService;
@@ -44,13 +46,13 @@ public class ReservationServiceImpl implements ReservationService {
     public ReservationResponse createReservation(ReservationRequest request) {
         try {
             validator.validateCreation(request);
-            // checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
+            // checkDriverAvailability(request.getdriverId(), request.getDateHeure());
             checkVehicleAvailability(request.getVehiculeId(), request.getDateHeure());
 
             Reservation reservation = reservationMapper.toEntity(request);
             reservationMapper.updatePrix(reservation, baseRate, perKmRate);
             
-            return reservationMapper.toResponse(reservationRepository.save(reservation));
+            return reservationMapper.toResponse(reservationDao.save(reservation));
         } catch (Exception e) {
             throw new ReservationException("Failed to create reservation: " + e.getMessage(), e);
         }
@@ -63,7 +65,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Page<ReservationResponse> getAllReservations(Pageable pageable) {
-        return reservationRepository.findAll(pageable)
+        return reservationDao.findAll(pageable)
                 .map(reservationMapper::toResponse);
     }
 
@@ -73,44 +75,44 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = findReservationById(id);
         validateReservationStatus(reservation, StatutReservation.CREATED);
         
-        // checkDriverAvailability(request.getChauffeurId(), request.getDateHeure());
+        // checkDriverAvailability(request.getdriverId(), request.getDateHeure());
         checkVehicleAvailability(request.getVehiculeId(), request.getDateHeure());
         
         reservationMapper.updateEntityFromRequest(request, reservation);
         reservationMapper.updatePrix(reservation, baseRate, perKmRate);
         
-        return reservationMapper.toResponse(reservationRepository.save(reservation));
+        return reservationMapper.toResponse(reservationDao.save(reservation));
     }
 
     @Override
     public void deleteReservation(Long id) {
         Reservation reservation = findReservationById(id);
         validateReservationStatus(reservation, StatutReservation.CREATED);
-        reservationRepository.deleteById(id);
+        reservationDao.deleteById(id);
     }
 
     @Override
     public List<ReservationResponse> getReservationsByStatus(StatutReservation statut) {
-        return reservationRepository.findByStatut(statut).stream()
+        return reservationDao.findByStatut(statut).stream()
                 .map(reservationMapper::toResponse)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Page<ReservationResponse> getReservationsByDriver(Long chauffeurId, Pageable pageable) {
-        return reservationRepository.findByChauffeurId(chauffeurId, pageable)
-                .map(reservationMapper::toResponse);
-    }
+    // @Override
+    // public Page<ReservationResponse> getReservationsByDriver(UUID driverId, Pageable pageable) {
+    //     return reservationDao.findByDriverId(driverId, pageable)
+    //             .map(reservationMapper::toResponse);
+    // }
 
     @Override
     public Page<ReservationResponse> getReservationsByVehicle(UUID vehiculeId, Pageable pageable) {
-        return reservationRepository.findByVehiculeId(vehiculeId, pageable)
+        return reservationDao.findByVehiculeId(vehiculeId, pageable)
                 .map(reservationMapper::toResponse);
     }
 
     @Override
     public List<ReservationResponse> getReservationsBetweenDates(LocalDateTime debut, LocalDateTime fin) {
-        return reservationRepository.findByDateHeureBetween(debut, fin).stream()
+        return reservationDao.findByDateHeureBetween(debut, fin).stream()
                 .map(reservationMapper::toResponse)
                 .collect(Collectors.toList());
     }
@@ -144,7 +146,7 @@ public class ReservationServiceImpl implements ReservationService {
             Reservation reservation = findReservationById(id);
             validator.validateStatusTransition(reservation, StatutReservation.CONFIRMED);
             reservation.setStatut(StatutReservation.CONFIRMED);
-            return reservationMapper.toResponse(reservationRepository.save(reservation));
+            return reservationMapper.toResponse(reservationDao.save(reservation));
         } catch (Exception e) {
             throw new ReservationException("Failed to confirm reservation: " + e.getMessage(), e);
         }
@@ -158,7 +160,7 @@ public class ReservationServiceImpl implements ReservationService {
             throw new IllegalStateException("Cannot cancel a completed reservation");
         }
         reservation.setStatut(StatutReservation.CANCELLED);
-        return reservationMapper.toResponse(reservationRepository.save(reservation));
+        return reservationMapper.toResponse(reservationDao.save(reservation));
     }
 
     @Override
@@ -167,20 +169,20 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = findReservationById(id);
         validateReservationStatus(reservation, StatutReservation.CONFIRMED);
         reservation.setStatut(StatutReservation.COMPLETED);
-        return reservationMapper.toResponse(reservationRepository.save(reservation));
+        return reservationMapper.toResponse(reservationDao.save(reservation));
     }
 
     // @Override
-    // public boolean checkDriverAvailability(Long chauffeurId, LocalDateTime dateHeure) {
+    // public boolean checkDriverAvailability(UUID driverId, LocalDateTime dateHeure) {
     //     LocalDateTime endTime = dateHeure.plusHours(2); // Assuming 2-hour reservation duration
     //     List<Reservation> overlapping = reservationRepository.findOverlappingReservations(
-    //         chauffeurId, dateHeure, endTime);
+    //         driverId, dateHeure, endTime);
         
     //     if (!overlapping.isEmpty()) {
     //         throw new IllegalStateException("Driver is not available at the requested time");
     //     }
         
-    //     return driverService.isAvailable(chauffeurId, dateHeure);
+    //     return driverService.isAvailable(driverId, dateHeure);
     // }
 
     @Override
@@ -193,7 +195,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     private Reservation findReservationById(Long id) {
-        return reservationRepository.findById(id)
+        return reservationDao.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found with id: " + id));
     }
 

@@ -28,7 +28,7 @@ public class ReservationRequest {
     private Double distanceKm;
 
     @NotNull(message = "L'ID du chauffeur est obligatoire")
-    private Long chauffeurId;
+    private Long driverId;
 
     @NotNull(message = "L'ID du véhicule est obligatoire")
     private UUID vehiculeId;
