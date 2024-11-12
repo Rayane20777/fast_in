@@ -1,0 +1,170 @@
+Project context
+Une société de taxis souhaite digitaliser la gestion de ses services via une API REST. Cette plateforme servira à gérer les réservations, les chauffeurs, les véhicules et le suivi des courses
+
+​
+
+Fonctionnalités principales :
+
+Gestion des réservations (création, modification, suppression, affichage)
+Gestion des chauffeurs (création, modification, suppression, affichage)
+Gestion des véhicules (création, modification, suppression, affichage)
+Gestion des analytics et statistiques
+​
+
+Structure des classes principales :
+
+Reservation (dateHeure, adresseDepart, adresseArrivee, prix, statut[CRÉÉE, CONFIRMÉE, TERMINÉE, ANNULÉE], distanceKm)
+adresse = ville + quartier
+Chauffeur (nom, prenom, statut[DISPONIBLE, EN_COURSE, INDISPONIBLE], disponibiliteDebut, disponibiliteFin)
+Vehicule (modele, immatriculation, kilometrage, statut[DISPONIBLE, EN_COURSE, INDISPONIBLE], type[BERLINE, VAN, MINIBUS])
+
+​
+
+un chauffeur peut avoir plusieurs réservations
+un véhicule peut être réservé plusieurs fois
+une reservation est liée à un seul véhicule et un seul chauffeur
+autre relation à ajouter si vous la voyez nécessaire
+
+​
+
+Logiques métier et Endpoints REST :
+
+1- Gestion des reservations :
+-Calcul du prix basé sur la distance qui doit être au maximum 100km ainsi que sur le type de véhicule
+-Vérification disponibilité chauffeur-véhicule
+-Gestion du statut de réservation
+
+​
+
+les Endpoints REST doivent commencer par /api/reservations/ ...
+
+La requête de l'Endpoint suivant doit être implémentée dans la couche DAO et doit retourner un seul objet JSON contenant TOUS les indicateurs demandés :
+
+GET /api/reservations/analytics
+
+Prix moyen par kilomètre
+Distance moyenne des courses
+Distribution des réservations par plage horaire // exemple : 8h-9h : 15 réservations, 9h-10h : 20 réservations, etc.
+Zones géographiques les plus demandées (analyse des adresses)
+​
+
+2- Gestion des Chauffeurs :
+-Gestion des disponibilités
+-Un seul véhicule à la fois
+-Une seule réservation active : pas de nouvelle réservation tant que l'ancienne n'est pas encore terminée
+
+​
+
+les Endpoints REST doivent commencer par /api/chauffeurs/ ...
+
+La requête de l'Endpoint suivant doit être implémentée dans la couche DAO et doit retourner un seul objet JSON contenant TOUS les indicateurs demandés :
+
+GET /api/chauffeurs/analytics
+
+Taux d'occupation des chauffeurs // pourcentage du temps où un chauffeur est EN_COURSE
+Analyse des plages horaires de disponibilité // croisement entre disponibiliteDebut et disponibiliteFin pour voir les créneaux couverts
+Répartition des statuts des chauffeurs par période // nombre de chauffeurs dans chaque statut. exemple : 10 DISPONIBLE, 5 EN_COURSE, 2 INDISPONIBLE
+​
+
+3- Gestion des Véhicules :
+-BERLINE // Voiture standard 4-5 places : 5 MAD/km
+-VAN // 7-9 places : 7 MAD/km
+-MINIBUS // Plus de 9 places : 9 MAD/km
+-Un seul chauffeur à la fois
+-Une seule réservation active : pas de nouvelle réservation tant que l'ancienne n'est pas encore terminée
+
+​
+
+les Endpoints REST doivent commencer par /api/vehicules/ ...
+
+La requête de l'Endpoint suivant doit être implémentée dans la couche DAO et doit retourner un seul objet JSON contenant TOUS les indicateurs demandés :
+
+GET /api/vehicules/analytics
+
+Kilométrage moyen par type de véhicule
+Taux d'utilisation par type de véhicule // pourcentage du temps où les véhicules de chaque type sont EN_COURSE
+État de la flotte // nombre de véhicules dans chaque statut. exemple : 15 DISPONIBLE, 8 EN_COURSE, 3 INDISPONIBLE
+​
+
+Couches applicatives :
+Controller (REST) ,Service, Repository, DAO (pour requêtes complexes), Models, DTO, Mapper, Exception, Validation, Utils, Tests (unitaire et d'intégration)
+
+​
+
+Technologies et concepts à utiliser :
+
+Configuration via application.yaml (pas de application.properties)
+Profiles (dev, QA, prod) -- application-dev.yaml (H2) -- application-qa.yaml (MySQL) -- application-prod.yaml (PostgreSQL)
+REST API
+
+Endpoints CRUD pour toutes les entités
+Méthodes HTTP (GET, POST, PUT, DELETE, PATCH)
+Bonnes pratiques REST
+Tests via Postman
+Swagger pour documentation API
+​
+
+Spring Data JPA
+
+JpaRepository et méthodes de base
+Requêtes personnalisées avec ou sans @Query
+Implémentation de la pagination
+DAO pour requêtes analytiques complexes
+​
+
+Bases de données :
+
+H2 (profil dev)
+MySQL (profil QA)
+PostgreSQL (profil prod)
+Liquibase pour gestion des migrations (Bonus)
+​
+
+Exigences techniques à utiliser :
+
+Tests unitaires et d'intégration (JUnit et Mockito)
+Design patterns (Repository, DTO, Mapper)
+Système de logging (LOGGER)
+Validations métier
+Gestion des transactions et des exceptions
+​
+
+Fonctionnalités Java 8
+
+​
+
+Outils de travail : Git avec branches, IDE au choix, JIRA + Scrum, Lombok, Spring Boot DevTools, SonarLint, Debugger
+
+​
+
+Bonus : Gestion de la base de données avec Liquibase :
+Imaginez que votre application de taxi est en prod avec des vraies données. On voudrait effectuer des modifications de la base de données (nouveau champ téléphone pour les chauffeurs ...)
+
+Le problème :
+
+Impossible de supprimer/recréer les tables (perte des données)
+Toute l'équipe doit appliquer les modifications dans le même ordre
+Les changements doivent être identiques en dev, qa et prod
+​
+
+La solution : Liquibase
+
+Garde l'historique de tous les changements de la base
+Permet de modifier la structure sans perdre les données
+Garantit que tous les développeurs et tous les environnements sont synchronisés
+​
+
+À réaliser :
+
+Mettre en place Liquibase avec 3 scripts initiaux :
+
+Création des tables
+Ajout des contraintes
+Insertion des données de référence
+Structure à respecter :
+src/main/resources/
+db/changelog/
+db.changelog-master.yaml
+changes/ (001-create-schema.sql, 002-constraints.sql, 003-reference-data.sql )
+
+Configurer pour les 3 environnements (dev, qa, prod)
