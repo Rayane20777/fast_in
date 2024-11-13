@@ -3101,3 +3101,161 @@ Caused by: java.lang.ClassNotFoundException: ReservationAnalytics
 	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:145)
 	at java.lang.ClassLoader.loadClass(ClassLoader.java:351)
 	... 43 common frames omitted
+2024-11-13 16:59:00 [restartedMain] INFO  com.fast_in.FastInApplication - Starting FastInApplication using Java 1.8.0_422 on TSUKIIYA with PID 20316 (C:\Users\ssngn\Documents\Youcode\fast_in\target\classes started by ssngn in C:\Users\ssngn\Documents\Youcode\fast_in)
+2024-11-13 16:59:00 [restartedMain] DEBUG com.fast_in.FastInApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2024-11-13 16:59:00 [restartedMain] INFO  com.fast_in.FastInApplication - The following 1 profile is active: "dev"
+2024-11-13 16:59:01 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-13 16:59:01 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 22 ms. Found 3 JPA repository interfaces.
+2024-11-13 16:59:01 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2024-11-13 16:59:01 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2024-11-13 16:59:01 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-11-13 16:59:01 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2024-11-13 16:59:01 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Initializing Spring embedded WebApplicationContext
+2024-11-13 16:59:01 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 325 ms
+2024-11-13 16:59:01 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-24 - Starting...
+2024-11-13 16:59:01 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-24 - Start completed.
+2024-11-13 16:59:01 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:fast_in_db'
+2024-11-13 16:59:01 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-13 16:59:01 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-11-13 16:59:01 [restartedMain] DEBUG org.hibernate.SQL - create table drivers (id  bigserial not null, primary key (id))
+2024-11-13 16:59:01 [restartedMain] DEBUG org.hibernate.SQL - create table reservation (id  bigserial not null, quartier_arrivee varchar(255) not null, ville_arrivee varchar(255) not null, cancelled_at timestamp, completed_at timestamp, confirmed_at timestamp, course_end_time timestamp, course_start_time timestamp, created_at timestamp not null, date_heure timestamp not null, quartier_depart varchar(255) not null, ville_depart varchar(255) not null, distance_km float8 not null, price float8 not null, status varchar(255) not null, updated_at timestamp, driver_id int8 not null, vehicle_id uuid not null, primary key (id))
+2024-11-13 16:59:01 [restartedMain] DEBUG org.hibernate.SQL - create table vehicle (id uuid not null, mileage float8 not null, model varchar(255) not null, registration_number varchar(255) not null, status varchar(255), type varchar(255), primary key (id))
+2024-11-13 16:59:01 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FK847p95e1hen7gfnos10a07q9t foreign key (driver_id) references drivers
+2024-11-13 16:59:01 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FKrm327sr0rb11mme0kbsm37od5 foreign key (vehicle_id) references vehicle
+2024-11-13 16:59:01 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-13 16:59:01 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-13 16:59:01 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'reservationController': Lookup method resolution failed; nested exception is java.lang.IllegalStateException: Failed to introspect Class [com.fast_in.controller.ReservationController] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@3a668662]
+2024-11-13 16:59:01 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-13 16:59:01 [restartedMain] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2024-11-13 16:59:01 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-24 - Shutdown initiated...
+2024-11-13 16:59:01 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-24 - Shutdown completed.
+2024-11-13 16:59:01 [restartedMain] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2024-11-13 16:59:01 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2024-11-13 16:59:01 [restartedMain] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'reservationController': Lookup method resolution failed; nested exception is java.lang.IllegalStateException: Failed to introspect Class [com.fast_in.controller.ReservationController] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@3a668662]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:298)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.determineConstructorsFromBeanPostProcessors(AbstractAutowireCapableBeanFactory.java:1302)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1219)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:929)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:591)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:409)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at com.fast_in.FastInApplication.main(FastInApplication.java:10)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.lang.IllegalStateException: Failed to introspect Class [com.fast_in.controller.ReservationController] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@3a668662]
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:485)
+	at org.springframework.util.ReflectionUtils.doWithLocalMethods(ReflectionUtils.java:321)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:276)
+	... 23 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: com/fast_in/dto/request/ReservationRequest
+	at java.lang.Class.getDeclaredMethods0(Native Method)
+	at java.lang.Class.privateGetDeclaredMethods(Class.java:2701)
+	at java.lang.Class.getDeclaredMethods(Class.java:1975)
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:467)
+	... 25 common frames omitted
+Caused by: java.lang.ClassNotFoundException: com.fast_in.dto.request.ReservationRequest
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:387)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:418)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:352)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:351)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:348)
+	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:145)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:351)
+	... 29 common frames omitted
+2024-11-13 16:59:28 [restartedMain] INFO  com.fast_in.FastInApplication - Starting FastInApplication using Java 1.8.0_422 on TSUKIIYA with PID 20316 (C:\Users\ssngn\Documents\Youcode\fast_in\target\classes started by ssngn in C:\Users\ssngn\Documents\Youcode\fast_in)
+2024-11-13 16:59:28 [restartedMain] DEBUG com.fast_in.FastInApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2024-11-13 16:59:28 [restartedMain] INFO  com.fast_in.FastInApplication - The following 1 profile is active: "dev"
+2024-11-13 16:59:28 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-13 16:59:28 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 3 JPA repository interfaces.
+2024-11-13 16:59:28 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2024-11-13 16:59:28 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2024-11-13 16:59:28 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-11-13 16:59:28 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2024-11-13 16:59:28 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Initializing Spring embedded WebApplicationContext
+2024-11-13 16:59:28 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 219 ms
+2024-11-13 16:59:28 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-25 - Starting...
+2024-11-13 16:59:28 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-25 - Start completed.
+2024-11-13 16:59:28 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:fast_in_db'
+2024-11-13 16:59:28 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-13 16:59:28 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-11-13 16:59:28 [restartedMain] DEBUG org.hibernate.SQL - create table drivers (id  bigserial not null, primary key (id))
+2024-11-13 16:59:28 [restartedMain] DEBUG org.hibernate.SQL - create table reservation (id  bigserial not null, quartier_arrivee varchar(255) not null, ville_arrivee varchar(255) not null, cancelled_at timestamp, completed_at timestamp, confirmed_at timestamp, course_end_time timestamp, course_start_time timestamp, created_at timestamp not null, date_heure timestamp not null, quartier_depart varchar(255) not null, ville_depart varchar(255) not null, distance_km float8 not null, price float8 not null, status varchar(255) not null, updated_at timestamp, driver_id int8 not null, vehicle_id uuid not null, primary key (id))
+2024-11-13 16:59:28 [restartedMain] DEBUG org.hibernate.SQL - create table vehicle (id uuid not null, mileage float8 not null, model varchar(255) not null, registration_number varchar(255) not null, status varchar(255), type varchar(255), primary key (id))
+2024-11-13 16:59:28 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FK847p95e1hen7gfnos10a07q9t foreign key (driver_id) references drivers
+2024-11-13 16:59:28 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FKrm327sr0rb11mme0kbsm37od5 foreign key (vehicle_id) references vehicle
+2024-11-13 16:59:28 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-13 16:59:28 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-13 16:59:28 [restartedMain] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'reservationController': Lookup method resolution failed; nested exception is java.lang.IllegalStateException: Failed to introspect Class [com.fast_in.controller.ReservationController] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@14285089]
+2024-11-13 16:59:28 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-13 16:59:29 [restartedMain] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2024-11-13 16:59:29 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-25 - Shutdown initiated...
+2024-11-13 16:59:29 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-25 - Shutdown completed.
+2024-11-13 16:59:29 [restartedMain] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2024-11-13 16:59:29 [restartedMain] INFO  o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2024-11-13 16:59:29 [restartedMain] ERROR o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'reservationController': Lookup method resolution failed; nested exception is java.lang.IllegalStateException: Failed to introspect Class [com.fast_in.controller.ReservationController] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@14285089]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:298)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.determineConstructorsFromBeanPostProcessors(AbstractAutowireCapableBeanFactory.java:1302)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1219)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:929)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:591)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:409)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at com.fast_in.FastInApplication.main(FastInApplication.java:10)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: java.lang.IllegalStateException: Failed to introspect Class [com.fast_in.controller.ReservationController] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@14285089]
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:485)
+	at org.springframework.util.ReflectionUtils.doWithLocalMethods(ReflectionUtils.java:321)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.determineCandidateConstructors(AutowiredAnnotationBeanPostProcessor.java:276)
+	... 23 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: com/fast_in/dto/request/ReservationRequest
+	at java.lang.Class.getDeclaredMethods0(Native Method)
+	at java.lang.Class.privateGetDeclaredMethods(Class.java:2701)
+	at java.lang.Class.getDeclaredMethods(Class.java:1975)
+	at org.springframework.util.ReflectionUtils.getDeclaredMethods(ReflectionUtils.java:467)
+	... 25 common frames omitted
+Caused by: java.lang.ClassNotFoundException: com.fast_in.dto.request.ReservationRequest
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:387)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:418)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:352)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:351)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:348)
+	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:145)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:351)
+	... 29 common frames omitted
