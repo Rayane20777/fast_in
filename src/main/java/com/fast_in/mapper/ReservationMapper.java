@@ -14,6 +14,8 @@ import com.fast_in.model.Reservation;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ReservationMapper {
 
+
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "prix", ignore = true)
     @Mapping(target = "statut", constant = "CRÉÉE")

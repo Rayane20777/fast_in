@@ -1,15 +1,15 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/fast_in_dev
-    username: dev_user
-    password: dev_password
+    url: jdbc:postgresql://localhost:5432/fast_in
+    username: postgres
+    password: password
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
 server:
-  port: 8080
+  port: 8081
 
 logging:
   level:
