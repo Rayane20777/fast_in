@@ -45,8 +45,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT AVG(r.distanceKm) FROM Reservation r WHERE r.status = 'COMPLETED'")
     Double calculateAverageDistance();
     
-    @Query("SELECT r.departureAddress.city, COUNT(r) FROM Reservation r " +
-           "GROUP BY r.departureAddress.city ORDER BY COUNT(r) DESC")
+    @Query("SELECT r.departureAddress.ville, COUNT(r) FROM Reservation r " +
+           "GROUP BY r.departureAddress.ville ORDER BY COUNT(r) DESC")
     List<Object[]> findMostRequestedDepartureLocations();
     
     @Query("SELECT HOUR(r.dateTime), COUNT(r) FROM Reservation r " +

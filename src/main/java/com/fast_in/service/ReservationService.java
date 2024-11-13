@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.fast_in.dto.request.ReservationRequest;
 import com.fast_in.dto.response.ReservationResponse;
+import com.fast_in.dto.response.ReservationAnalytics;
 import com.fast_in.model.enums.ReservationStatus;
 
 public interface ReservationService {
@@ -19,25 +20,15 @@ public interface ReservationService {
     ReservationResponse updateReservation(Long id, ReservationRequest request);
     void deleteReservation(Long id);
     
-    // Search operations
-    List<ReservationResponse> getReservationsByStatus(ReservationStatus statut);
-    Page<ReservationResponse> getReservationsByDriver(Long driverId, Pageable pageable);
-    Page<ReservationResponse> getReservationsByVehicle(UUID vehiculeId, Pageable pageable);
-    List<ReservationResponse> getReservationsBetweenDates(LocalDateTime debut, LocalDateTime fin);
-    List<ReservationResponse> getReservationsByCity(String ville);
-    
-    // Analytics methods
-    Double getAveragePricePerKm();
-    Double getAverageDistance();
-    List<Object[]> getMostRequestedDepartureLocations();
-    List<Object[]> getReservationsByHourDistribution();
-    List<Object[]> getReservationsByTimeSlot();
-    List<Object[]> getAveragePricePerKmByVehicleType();
-    
-    // Business logic methods
+    // Status management
     ReservationResponse confirmReservation(Long id);
     ReservationResponse cancelReservation(Long id);
     ReservationResponse completeReservation(Long id);
-    boolean checkDriverAvailability(Long driverId, LocalDateTime dateHeure);
-    boolean checkVehicleAvailability(UUID vehiculeId, LocalDateTime dateHeure);
+    
+    // Analytics methods as specified in requirements
+    Double getAveragePricePerKm();
+    Double getAverageDistance();
+    List<Object[]> getReservationsByHourDistribution();
+    List<Object[]> getMostRequestedDepartureLocations();
+    ReservationAnalytics getAnalytics();
 }

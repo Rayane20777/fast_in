@@ -10,6 +10,7 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 
 import com.fast_in.model.Address;
+import com.fast_in.model.Vehicle;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -52,4 +53,10 @@ public class ReservationRequest {
     @NotNull(message = "Arrival address is required")
     @Valid
     private Address arrivalAddress;
+
+    @Schema(description = "Vehicle details")
+    @NotNull(message = "Vehicle is required")
+    @Valid
+    private Vehicle vehicle;
+    
 }

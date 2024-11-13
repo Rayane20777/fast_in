@@ -61,53 +61,14 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/status/{status}")
-    @Operation(summary = "Get reservations by status")
-    public ResponseEntity<List<ReservationResponse>> getReservationsByStatus(
-            @PathVariable ReservationStatus status) {
-        return ResponseEntity.ok(reservationService.getReservationsByStatus(status));
-    }
-
-    @GetMapping("/driver/{driverId}")
-    @Operation(summary = "Get reservations by driver")
-    public ResponseEntity<Page<ReservationResponse>> getReservationsByDriver(
-            @PathVariable Long driverId,
-            Pageable pageable) {
-        return ResponseEntity.ok(reservationService.getReservationsByDriver(driverId, pageable));
-    }
-
-    @GetMapping("/vehicle/{vehicleId}")
-    @Operation(summary = "Get reservations by vehicle")
-    public ResponseEntity<Page<ReservationResponse>> getReservationsByVehicle(
-            @PathVariable UUID vehicleId,
-            Pageable pageable) {
-        return ResponseEntity.ok(reservationService.getReservationsByVehicle(vehicleId, pageable));
-    }
-
-    @GetMapping("/dates")
-    @Operation(summary = "Get reservations between dates")
-    public ResponseEntity<List<ReservationResponse>> getReservationsBetweenDates(
-            @RequestParam LocalDateTime startDate,
-            @RequestParam LocalDateTime endDate) {
-        return ResponseEntity.ok(reservationService.getReservationsBetweenDates(startDate, endDate));
-    }
-
-    @GetMapping("/city/{city}")
-    @Operation(summary = "Get reservations by city")
-    public ResponseEntity<List<ReservationResponse>> getReservationsByCity(@PathVariable String city) {
-        return ResponseEntity.ok(reservationService.getReservationsByCity(city));
-    }
-
     // @GetMapping("/analytics")
     // @Operation(summary = "Get reservation analytics")
     // public ResponseEntity<ReservationAnalytics> getAnalytics() {
     //     return ResponseEntity.ok(ReservationAnalytics.builder()
     //         .averagePricePerKm(reservationService.getAveragePricePerKm())
     //         .averageDistance(reservationService.getAverageDistance())
-    //         .mostRequestedLocations(reservationService.getMostRequestedDepartureLocations())
     //         .hourlyDistribution(reservationService.getReservationsByHourDistribution())
-    //         .timeSlotDistribution(reservationService.getReservationsByTimeSlot())
-    //         .pricePerKmByVehicleType(reservationService.getAveragePricePerKmByVehicleType())
+    //         .mostRequestedLocations(reservationService.getMostRequestedDepartureLocations())
     //         .build());
     // }
 

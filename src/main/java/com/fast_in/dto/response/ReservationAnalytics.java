@@ -30,6 +30,7 @@ public class ReservationAnalytics {
     @Schema(description = "Average price per kilometer by vehicle type")
     private Map<String, Double> pricePerKmByVehicleType;
     
+    
     @Data
     @Builder
     public static class LocationCount {

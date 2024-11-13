@@ -16,7 +16,7 @@ import com.fast_in.model.enums.ReservationStatus;
 
 @Repository
 public interface ReservationDao extends JpaRepository<Reservation, Long> {
-    // Basic finder methods with improved naming
+    // Basic finder methods
     List<Reservation> findByStatus(ReservationStatus status);
     
     @Query("SELECT r FROM Reservation r WHERE r.driver.id = :driverId")
@@ -25,62 +25,22 @@ public interface ReservationDao extends JpaRepository<Reservation, Long> {
     @Query("SELECT r FROM Reservation r WHERE r.vehicle.id = :vehicleId")
     Page<Reservation> findByVehicleId(@Param("vehicleId") UUID vehicleId, Pageable pageable);
     
-    @Query("SELECT r FROM Reservation r WHERE r.dateTime BETWEEN :start AND :end")
-    List<Reservation> findByDateTimeBetween(
-        @Param("start") LocalDateTime start, 
-        @Param("end") LocalDateTime end
-    );
+    // Analytics queries as per requirements
+    @Query("SELECT AVG(r.price / r.distanceKm) FROM Reservation r WHERE r.status = 'COMPLETED'")
+    Double calculateAveragePricePerKm();
     
-    // Advanced search methods
-    @Query("SELECT r FROM Reservation r WHERE r.distanceKm BETWEEN :min AND :max")
-    List<Reservation> findByDistanceRange(
-        @Param("min") Double minDistance, 
-        @Param("max") Double maxDistance
-    );
+    @Query("SELECT AVG(r.distanceKm) FROM Reservation r WHERE r.status = 'COMPLETED'")
+    Double calculateAverageDistance();
     
-    @Query("SELECT r FROM Reservation r " +
-           "WHERE r.departureAddress.ville = :city " +
-           "OR r.arrivalAddress.ville = :city")
-    Page<Reservation> findByCity(@Param("city") String city, Pageable pageable);
-    
-    @Query("SELECT r FROM Reservation r WHERE r.departureAddress.ville = :city")
-    List<Reservation> findByDepartureAddressCity(@Param("city") String city);
-    
-    // Complex search methods
-    @Query("SELECT r FROM Reservation r " +
-           "WHERE r.status = :status " +
-           "AND r.dateTime BETWEEN :start AND :end " +
-           "AND (r.departureAddress.ville = :city OR r.arrivalAddress.ville = :city)")
-    Page<Reservation> findByStatusAndDateTimeAndCity(
-        @Param("status") ReservationStatus status,
-        @Param("start") LocalDateTime start,
-        @Param("end") LocalDateTime end,
-        @Param("city") String city,
-        Pageable pageable
-    );
-    
-    // Statistics methods
-    @Query("SELECT COUNT(r) FROM Reservation r " +
-           "WHERE r.status = :status " +
-           "AND r.dateTime BETWEEN :start AND :end")
-    Long countByStatusAndDateRange(
-        @Param("status") ReservationStatus status,
-        @Param("start") LocalDateTime start,
-        @Param("end") LocalDateTime end
-    );
-    
-    @Query("SELECT r.departureAddress.ville as city, " +
-           "COUNT(r) as count, " +
-           "AVG(r.price) as avgPrice " +
+    @Query("SELECT HOUR(r.dateTime) as hour, COUNT(r) as count " +
            "FROM Reservation r " +
-           "WHERE r.dateTime BETWEEN :start AND :end " +
-           "GROUP BY r.departureAddress.ville " +
-           "HAVING COUNT(r) >= :minCount " +
-           "ORDER BY count DESC")
-    List<Object[]> findPopularDepartureCities(
-        @Param("start") LocalDateTime start,
-        @Param("end") LocalDateTime end,
-        @Param("minCount") Long minCount
-    );
+           "GROUP BY HOUR(r.dateTime) " +
+           "ORDER BY hour")
+    List<Object[]> getReservationsByHourDistribution();
     
+    @Query("SELECT r.departureAddress.ville, COUNT(r) " +
+           "FROM Reservation r " +
+           "GROUP BY r.departureAddress.ville " +
+           "ORDER BY COUNT(r) DESC")
+    List<Object[]> findMostRequestedLocations();
 }

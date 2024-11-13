@@ -43,15 +43,6 @@ public class ReservationServiceImpl implements ReservationService {
     private final PriceCalculator priceCalculator;
     private final ReservationDao reservationDao;
 
-    @Autowired(required = false)
-    private DriverService driverService;
-
-    @Autowired(required = false)
-    private VehicleService vehicleService;
-
-    @Value("${reservation.duration.default:2}")
-    private int defaultReservationDuration;
-
     @Override
     @Transactional
     public ReservationResponse createReservation(ReservationRequest request) {
@@ -60,37 +51,13 @@ public class ReservationServiceImpl implements ReservationService {
 
         Reservation reservation = reservationMapper.toEntity(request);
         
-        // // Handle optional driver service
-        // if (driverService != null) {
-        //     Driver driver = driverService.findById(request.getDriverId());
-
-        //     if (!checkDriverAvailability(driver.getId(), request.getDateTime())) {
-        //         throw new ReservationException("Driver is not available at the requested time");
-        //     }
-        //     reservation.setDriver(driver);
-        // }
-
-        // Handle optional vehicle service
-        if (vehicleService != null) {
-            // Vehicle vehicle = vehicleService.findById(request.getVehicleId());
-
-            Vehicle vehicle = null;
-            if (!checkVehicleAvailability(vehicle.getId(), request.getDateTime())) {
-                throw new ReservationException("Vehicle is not available at the requested time");
-            }
-            reservation.setVehicle(vehicle);
-            
-            // Calculate price only if vehicle is present
-            double price = priceCalculator.calculatePrice(
-                request.getDistanceKm(),
-                vehicle.getType(),
-                request.getDateTime()
-            );
-            reservation.setPrice(price);
-        } else {
-            // Set default price if no vehicle service
-            reservation.setPrice(request.getDistanceKm() * 10.0); // Basic rate
-        }
+        // Calculate price based on distance and vehicle type
+        double price = priceCalculator.calculatePrice(
+            request.getDistanceKm(),
+            request.getVehicle().getType(),
+            request.getDateTime()
+        );
+        reservation.setPrice(price);
 
         Reservation savedReservation = reservationRepository.save(reservation);
         log.info("Created reservation with ID: {}", savedReservation.getId());
@@ -117,27 +84,12 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = findReservationById(id);
         validator.validateStatusTransition(reservation, ReservationStatus.CREATED);
 
-        // Driver newDriver = driverService.findById(request.getDriverId());
-        Driver newDriver = null;
-
-        // Vehicle newVehicle = vehicleService.findById(request.getVehicleId());
-        Vehicle newVehicle = null;
-
-        // if (!checkDriverAvailability(newDriver.getId(), request.getDateTime())) {
-        //     throw new ReservationException("New driver is not available at the requested time");
-        // }
-
-        if (!checkVehicleAvailability(newVehicle.getId(), request.getDateTime())) {
-            throw new ReservationException("New vehicle is not available at the requested time");
-        }
-
         reservationMapper.updateEntityFromRequest(reservation, request);
-        reservation.setDriver(newDriver);
-        reservation.setVehicle(newVehicle);
 
+        // Recalculate price
         double price = priceCalculator.calculatePrice(
             request.getDistanceKm(),
-            newVehicle.getType(),
+            request.getVehicleType(),
             request.getDateTime()
         );
         reservation.setPrice(price);
@@ -154,69 +106,6 @@ public class ReservationServiceImpl implements ReservationService {
         }
         reservationRepository.delete(reservation);
         log.info("Deleted reservation {}", id);
-    }
-
-    @Override
-    public List<ReservationResponse> getReservationsByStatus(ReservationStatus status) {
-        return reservationDao.findByStatus(status).stream()
-            .map(reservationMapper::toResponse)
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public Page<ReservationResponse> getReservationsByDriver(Long driverId, Pageable pageable) {
-        return reservationDao.findByDriverId(driverId, pageable)
-            .map(reservationMapper::toResponse);
-    }
-
-    @Override
-    public Page<ReservationResponse> getReservationsByVehicle(UUID vehicleId, Pageable pageable) {
-        return reservationDao.findByVehicleId(vehicleId, pageable)
-            .map(reservationMapper::toResponse);
-    }
-
-    @Override
-    public List<ReservationResponse> getReservationsBetweenDates(LocalDateTime start, LocalDateTime end) {
-        return reservationDao.findByDateTimeBetween(start, end).stream()
-            .map(reservationMapper::toResponse)
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ReservationResponse> getReservationsByCity(String city) {
-        return reservationDao.findByDepartureAddressCity(city).stream()
-            .map(reservationMapper::toResponse)
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public Double getAveragePricePerKm() {
-        return reservationRepository.calculateAveragePricePerKm();
-    }
-
-    @Override
-    public Double getAverageDistance() {
-        return reservationRepository.calculateAverageDistance();
-    }
-
-    @Override
-    public List<Object[]> getMostRequestedDepartureLocations() {
-        return reservationRepository.findMostRequestedDepartureLocations();
-    }
-
-    @Override
-    public List<Object[]> getReservationsByHourDistribution() {
-        return reservationRepository.getReservationsByHourDistribution();
-    }
-
-    @Override
-    public List<Object[]> getReservationsByTimeSlot() {
-        return reservationRepository.getReservationsByTimeSlot();
-    }
-
-    @Override
-    public List<Object[]> getAveragePricePerKmByVehicleType() {
-        return reservationRepository.getAveragePricePerKmByVehicleType();
     }
 
     @Override
@@ -252,24 +141,35 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationMapper.toResponse(reservationRepository.save(reservation));
     }
 
+    // Analytics methods
     @Override
-    public boolean checkDriverAvailability(Long driverId, LocalDateTime dateTime) {
-        if (driverService == null) {
-            return true; // Always available if driver service is not present
-        }
-        LocalDateTime endTime = dateTime.plusHours(defaultReservationDuration);
-        List<Reservation> overlappingReservations = reservationRepository
-            .findOverlappingReservations(driverId, dateTime, endTime);
-        return overlappingReservations.isEmpty();
+    public Double getAveragePricePerKm() {
+        return reservationRepository.calculateAveragePricePerKm();
     }
 
     @Override
-    public boolean checkVehicleAvailability(UUID vehicleId, LocalDateTime dateTime) {
-        if (vehicleService == null) {
-            return true; // Always available if vehicle service is not present
-        }
-        LocalDateTime endTime = dateTime.plusHours(defaultReservationDuration);
-        return !reservationRepository.hasActiveReservations(vehicleId, dateTime, endTime);
+    public Double getAverageDistance() {
+        return reservationRepository.calculateAverageDistance();
+    }
+
+    @Override
+    public List<Object[]> getReservationsByHourDistribution() {
+        return reservationRepository.getReservationsByHourDistribution();
+    }
+
+    @Override
+    public List<Object[]> getMostRequestedDepartureLocations() {
+        return reservationRepository.findMostRequestedDepartureLocations();
+    }
+
+    @Override
+    public ReservationAnalytics getAnalytics() {
+        return ReservationAnalytics.builder()
+            .averagePricePerKm(getAveragePricePerKm())
+            .averageDistance(getAverageDistance())
+            .hourlyDistribution(getReservationsByHourDistribution())
+            .mostRequestedLocations(getMostRequestedDepartureLocations())
+            .build();
     }
 
     private Reservation findReservationById(Long id) {
