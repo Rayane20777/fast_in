@@ -19,39 +19,39 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class Reservation {  
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private LocalDateTime dateHeure;
-
-    @Embedded
-    private Adresse adresseDepart;
-
-    @Embedded
-    private Adresse adresseArrivee;
-
-    @Column(nullable = false)
-    private Double prix;
-
-    @Column(nullable = false)
-    private Double distanceKm;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private StatutReservation statut;
-
-    @ManyToOne
-    @JoinColumn(name = "chauffeur_id", nullable = false)
-    private Driver chauffeur;
-
-    @ManyToOne
-    @JoinColumn(name = "vehicle_id", nullable = false)
-    private Vehicle vehicle;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
+//
+//    @Column(nullable = false)
+//    private LocalDateTime dateHeure;
+//
+//    @Embedded
+//    private Adresse adresseDepart;
+//
+//    @Embedded
+//    private Adresse adresseArrivee;
+//
+//    @Column(nullable = false)
+//    private Double prix;
+//
+//    @Column(nullable = false)
+//    private Double distanceKm;
+//
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private StatutReservation statut;
+//
+////    @ManyToOne
+////    @JoinColumn(name = "chauffeur_id", nullable = false)
+////    private Driver chauffeur;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "vehicle_id", nullable = false)
+//    private Vehicle vehicle;
 }

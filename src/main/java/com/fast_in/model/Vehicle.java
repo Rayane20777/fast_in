@@ -34,7 +34,7 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private VehicleType type;
 
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Reservation> reservations;
+//    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Reservation> reservations;
 
 }
