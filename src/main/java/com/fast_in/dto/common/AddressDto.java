@@ -5,10 +5,10 @@ import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class AdresseDto {
-    @NotBlank(message = "La ville est obligatoire")
+public class AddressDto {
+    @NotBlank(message = "The city is required")
     private String ville;
     
-    @NotBlank(message = "Le quartier est obligatoire")
+    @NotBlank(message = "The neighborhood is required")
     private String quartier;
 } 

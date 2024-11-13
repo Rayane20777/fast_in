@@ -1,36 +1,53 @@
 package com.fast_in.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.springframework.stereotype.Component;
 
 import com.fast_in.dto.request.ReservationRequest;
 import com.fast_in.dto.response.ReservationResponse;
 import com.fast_in.model.Reservation;
+import com.fast_in.model.enums.ReservationStatus;
 
-@Mapper(componentModel = "spring", 
-        uses = {DriverMapper.class, VehicleMapper.class},
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface ReservationMapper {
+import lombok.RequiredArgsConstructor;
 
+@Component
+@RequiredArgsConstructor
+public class ReservationMapper {
 
+    public Reservation toEntity(ReservationRequest request) {
+        return Reservation.builder()
+            .dateTime(request.getDateTime())
+            .distanceKm(request.getDistanceKm())
+            .departureAddress(request.getDepartureAddress())
+            .arrivalAddress(request.getArrivalAddress())
+            .status(ReservationStatus.CREATED)
+            .build();
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "prix", ignore = true)
-    @Mapping(target = "statut", constant = "CRÉÉE")
-    @Mapping(target = "chauffeur.id", source = "driverId")
-    @Mapping(target = "vehicule.id", source = "vehiculeId")
-    Reservation toEntity(ReservationRequest request);
+    public ReservationResponse toResponse(Reservation reservation) {
+        return ReservationResponse.builder()
+            .id(reservation.getId())
+            // .driverId(reservation.getDriver().getId())
+            .vehicleId(reservation.getVehicle().getId())
+            .dateTime(reservation.getDateTime())
+            .distanceKm(reservation.getDistanceKm())
+            .price(reservation.getPrice())
+            .departureAddress(reservation.getDepartureAddress())
+            .arrivalAddress(reservation.getArrivalAddress())
+            .status(reservation.getStatus())
+            .courseStartTime(reservation.getCourseStartTime())
+            .courseEndTime(reservation.getCourseEndTime())
+            .confirmedAt(reservation.getConfirmedAt())
+            .completedAt(reservation.getCompletedAt())
+            .cancelledAt(reservation.getCancelledAt())
+            .createdAt(reservation.getCreatedAt())
+            .updatedAt(reservation.getUpdatedAt())
+            .build();
+    }
 
-    ReservationResponse toResponse(Reservation reservation);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    void updateEntityFromRequest(ReservationRequest request, @MappingTarget Reservation reservation);
-
-    default void updatePrix(Reservation reservation, double baseRate, double perKmRate) {
-        double prix = baseRate + (perKmRate * reservation.getDistanceKm());
-        reservation.setPrix(prix);
+    public void updateEntityFromRequest(Reservation reservation, ReservationRequest request) {
+        reservation.setDateTime(request.getDateTime());
+        reservation.setDistanceKm(request.getDistanceKm());
+        reservation.setDepartureAddress(request.getDepartureAddress());
+        reservation.setArrivalAddress(request.getArrivalAddress());
     }
 }
