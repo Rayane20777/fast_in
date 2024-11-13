@@ -13,26 +13,33 @@ Gestion des analytics et statistiques
 
 Structure des classes principales :
 
-Reservation (dateHeure, adresseDepart, adresseArrivee, prix, statut[CRÉÉE, CONFIRMÉE, TERMINÉE, ANNULÉE], distanceKm)
+Reservation (dateHeure, heureDebutCourse, heureFinCourse, adresseDepart, adresseArrivee, prix, statut[CRÉÉE, CONFIRMÉE, TERMINÉE, ANNULÉE], distanceKm)
+
 adresse = ville + quartier
+
+​
+
 Chauffeur (nom, prenom, statut[DISPONIBLE, EN_COURSE, INDISPONIBLE], disponibiliteDebut, disponibiliteFin)
+
+​
+
 Vehicule (modele, immatriculation, kilometrage, statut[DISPONIBLE, EN_COURSE, INDISPONIBLE], type[BERLINE, VAN, MINIBUS])
 
 ​
 
-un chauffeur peut avoir plusieurs réservations
-un véhicule peut être réservé plusieurs fois
-une reservation est liée à un seul véhicule et un seul chauffeur
-autre relation à ajouter si vous la voyez nécessaire
+un chauffeur peut avoir plusieurs réservations un véhicule peut être réservé plusieurs fois une reservation est liée à un seul véhicule et un seul chauffeur autre relation à ajouter si vous la voyez nécessaire
 
 ​
 
 Logiques métier et Endpoints REST :
 
 1- Gestion des reservations :
+
 -Calcul du prix basé sur la distance qui doit être au maximum 100km ainsi que sur le type de véhicule
--Vérification disponibilité chauffeur-véhicule
--Gestion du statut de réservation
+
+-Vérification disponibilité chauffeur
+
+-véhicule -Gestion du statut de réservation
 
 ​
 
@@ -49,8 +56,11 @@ Zones géographiques les plus demandées (analyse des adresses)
 ​
 
 2- Gestion des Chauffeurs :
+
 -Gestion des disponibilités
+
 -Un seul véhicule à la fois
+
 -Une seule réservation active : pas de nouvelle réservation tant que l'ancienne n'est pas encore terminée
 
 ​
@@ -67,10 +77,15 @@ Répartition des statuts des chauffeurs par période // nombre de chauffeurs dan
 ​
 
 3- Gestion des Véhicules :
+
 -BERLINE // Voiture standard 4-5 places : 5 MAD/km
+
 -VAN // 7-9 places : 7 MAD/km
+
 -MINIBUS // Plus de 9 places : 9 MAD/km
+
 -Un seul chauffeur à la fois
+
 -Une seule réservation active : pas de nouvelle réservation tant que l'ancienne n'est pas encore terminée
 
 ​
@@ -86,15 +101,22 @@ Taux d'utilisation par type de véhicule // pourcentage du temps où les véhicu
 État de la flotte // nombre de véhicules dans chaque statut. exemple : 15 DISPONIBLE, 8 EN_COURSE, 3 INDISPONIBLE
 ​
 
-Couches applicatives :
-Controller (REST) ,Service, Repository, DAO (pour requêtes complexes), Models, DTO, Mapper, Exception, Validation, Utils, Tests (unitaire et d'intégration)
+Couches applicatives : Controller (REST) ,Service, Repository, DAO (pour requêtes complexes), Models, DTO, Mapper, Exception, Validation, Utils, Tests (unitaire et d'intégration)
 
 ​
 
 Technologies et concepts à utiliser :
 
 Configuration via application.yaml (pas de application.properties)
-Profiles (dev, QA, prod) -- application-dev.yaml (H2) -- application-qa.yaml (MySQL) -- application-prod.yaml (PostgreSQL)
+Profiles (dev, QA, prod)
+application-dev.yaml (H2)
+
+application-qa.yaml (MySQL)
+
+application-prod.yaml (PostgreSQL)
+
+​
+
 REST API
 
 Endpoints CRUD pour toutes les entités
@@ -137,8 +159,7 @@ Outils de travail : Git avec branches, IDE au choix, JIRA + Scrum, Lombok, Sprin
 
 ​
 
-Bonus : Gestion de la base de données avec Liquibase :
-Imaginez que votre application de taxi est en prod avec des vraies données. On voudrait effectuer des modifications de la base de données (nouveau champ téléphone pour les chauffeurs ...)
+Bonus : Gestion de la base de données avec Liquibase : Imaginez que votre application de taxi est en prod avec des vraies données. On voudrait effectuer des modifications de la base de données (nouveau champ téléphone pour les chauffeurs ...)
 
 Le problème :
 
@@ -161,10 +182,6 @@ Mettre en place Liquibase avec 3 scripts initiaux :
 Création des tables
 Ajout des contraintes
 Insertion des données de référence
-Structure à respecter :
-src/main/resources/
-db/changelog/
-db.changelog-master.yaml
-changes/ (001-create-schema.sql, 002-constraints.sql, 003-reference-data.sql )
+Structure à respecter : src/main/resources/ db/changelog/ db.changelog-master.yaml changes/ (001-create-schema.sql, 002-constraints.sql, 003-reference-data.sql )
 
 Configurer pour les 3 environnements (dev, qa, prod)
