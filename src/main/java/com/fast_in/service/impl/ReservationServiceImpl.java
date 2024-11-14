@@ -1,61 +1,65 @@
 package com.fast_in.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.TreeMap;
+import java.util.LinkedHashMap;
+import java.util.HashMap;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fast_in.dao.ReservationDao;
 import com.fast_in.dto.request.ReservationRequest;
 import com.fast_in.dto.response.ReservationResponse;
 import com.fast_in.exception.ReservationException;
 import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.mapper.ReservationMapper;
 import com.fast_in.model.Reservation;
-import com.fast_in.model.enums.StatutReservation;
+import com.fast_in.model.enums.ReservationStatus;
 import com.fast_in.repository.ReservationRepository;
-import com.fast_in.service.DriverService;
 import com.fast_in.service.ReservationService;
-import com.fast_in.service.VehicleService;
+import com.fast_in.utils.PriceCalculator;
 import com.fast_in.validation.ReservationValidator;
+import com.fast_in.dto.response.ReservationAnalytics;
+import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import com.fast_in.dao.ReservationDao;
+import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
-    private final ReservationDao reservationDao;
     private final ReservationMapper reservationMapper;
     private final ReservationValidator validator;
-    private final DriverService driverService;
-    private final VehicleService vehicleService;
-
-    @Value("${reservation.price.base-rate}")
-    private double baseRate;
-
-    @Value("${reservation.price.per-km-rate}")
-    private double perKmRate;
+    private final PriceCalculator priceCalculator;
 
     @Override
+    @Transactional
     public ReservationResponse createReservation(ReservationRequest request) {
-        try {
-            validator.validateCreation(request);
-            // checkDriverAvailability(request.getdriverId(), request.getDateHeure());
-            checkVehicleAvailability(request.getVehiculeId(), request.getDateHeure());
+        log.info("Creating new reservation");
+        validator.validateCreation(request);
 
-            Reservation reservation = reservationMapper.toEntity(request);
-            reservationMapper.updatePrix(reservation, baseRate, perKmRate);
-            
-            return reservationMapper.toResponse(reservationDao.save(reservation));
-        } catch (Exception e) {
-            throw new ReservationException("Failed to create reservation: " + e.getMessage(), e);
-        }
+        Reservation reservation = reservationMapper.toEntity(request);
+        
+        // Calculate price based on distance and vehicle type
+        double price = priceCalculator.calculatePrice(
+            request.getDistanceKm(),
+            request.getVehicle().getType(),
+            request.getDateTime()
+        );
+        reservation.setPrice(price);
+
+        Reservation savedReservation = reservationRepository.save(reservation);
+        log.info("Created reservation with ID: {}", savedReservation.getId());
+        return reservationMapper.toResponse(savedReservation);
     }
 
     @Override
@@ -65,65 +69,77 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Page<ReservationResponse> getAllReservations(Pageable pageable) {
-        return reservationDao.findAll(pageable)
-                .map(reservationMapper::toResponse);
+        return reservationRepository.findAll(pageable)
+            .map(reservation -> reservationMapper.toResponse(reservation));
     }
 
     @Override
     @Transactional
     public ReservationResponse updateReservation(Long id, ReservationRequest request) {
+        log.info("Updating reservation {}", id);
+        validator.validateCreation(request);
+
         Reservation reservation = findReservationById(id);
-        validateReservationStatus(reservation, StatutReservation.CREATED);
-        
-        // checkDriverAvailability(request.getdriverId(), request.getDateHeure());
-        checkVehicleAvailability(request.getVehiculeId(), request.getDateHeure());
-        
-        reservationMapper.updateEntityFromRequest(request, reservation);
-        reservationMapper.updatePrix(reservation, baseRate, perKmRate);
-        
-        return reservationMapper.toResponse(reservationDao.save(reservation));
+        validator.validateStatusTransition(reservation, ReservationStatus.CREATED);
+
+        reservationMapper.updateEntityFromRequest(reservation, request);
+
+        // Recalculate price
+        double price = priceCalculator.calculatePrice(
+            request.getDistanceKm(),
+            request.getVehicleType(),
+            request.getDateTime()
+        );
+        reservation.setPrice(price);
+
+        return reservationMapper.toResponse(reservationRepository.save(reservation));
     }
 
     @Override
+    @Transactional
     public void deleteReservation(Long id) {
         Reservation reservation = findReservationById(id);
-        validateReservationStatus(reservation, StatutReservation.CREATED);
-        reservationDao.deleteById(id);
+        if (reservation.getStatus() != ReservationStatus.CREATED) {
+            throw new ReservationException("Can only delete reservations in CREATED status");
+        }
+        reservationRepository.delete(reservation);
+        log.info("Deleted reservation {}", id);
     }
 
     @Override
-    public List<ReservationResponse> getReservationsByStatus(StatutReservation statut) {
-        return reservationDao.findByStatut(statut).stream()
-                .map(reservationMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
-    // @Override
-    // public Page<ReservationResponse> getReservationsByDriver(UUID driverId, Pageable pageable) {
-    //     return reservationDao.findByDriverId(driverId, pageable)
-    //             .map(reservationMapper::toResponse);
-    // }
-
-    @Override
-    public Page<ReservationResponse> getReservationsByVehicle(UUID vehiculeId, Pageable pageable) {
-        return reservationDao.findByVehiculeId(vehiculeId, pageable)
-                .map(reservationMapper::toResponse);
+    @Transactional
+    public ReservationResponse confirmReservation(Long id) {
+        log.info("Confirming reservation {}", id);
+        Reservation reservation = findReservationById(id);
+        validator.validateStatusTransition(reservation, ReservationStatus.CONFIRMED);
+        
+        reservation.confirm();
+        return reservationMapper.toResponse(reservationRepository.save(reservation));
     }
 
     @Override
-    public List<ReservationResponse> getReservationsBetweenDates(LocalDateTime debut, LocalDateTime fin) {
-        return reservationDao.findByDateHeureBetween(debut, fin).stream()
-                .map(reservationMapper::toResponse)
-                .collect(Collectors.toList());
+    @Transactional
+    public ReservationResponse cancelReservation(Long id) {
+        log.info("Cancelling reservation {}", id);
+        Reservation reservation = findReservationById(id);
+        validator.validateStatusTransition(reservation, ReservationStatus.CANCELLED);
+        
+        reservation.cancel();
+        return reservationMapper.toResponse(reservationRepository.save(reservation));
     }
 
     @Override
-    public List<ReservationResponse> getReservationsByCity(String ville) {
-        return reservationRepository.findByVille(ville).stream()
-                .map(reservationMapper::toResponse)
-                .collect(Collectors.toList());
+    @Transactional
+    public ReservationResponse completeReservation(Long id) {
+        log.info("Completing reservation {}", id);
+        Reservation reservation = findReservationById(id);
+        validator.validateStatusTransition(reservation, ReservationStatus.COMPLETED);
+        
+        reservation.complete();
+        return reservationMapper.toResponse(reservationRepository.save(reservation));
     }
 
+    // Analytics methods
     @Override
     public Double getAveragePricePerKm() {
         return reservationRepository.calculateAveragePricePerKm();
@@ -135,75 +151,119 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Object[]> getMostRequestedDepartureLocations() {
-        return reservationRepository.findMostRequestedDepartureLocations();
+    public Map<Integer, Integer> getReservationsByHourDistribution() {
+        log.info("Fetching hourly distribution of reservations");
+        return reservationRepository.getReservationsByHourDistribution()
+            .stream()
+            .collect(Collectors.toMap(
+                row -> ((Number) row[0]).intValue(),
+                row -> ((Number) row[1]).intValue(),
+                (existing, replacement) -> existing,
+                TreeMap::new
+            ));
     }
-
+    
     @Override
-    @Transactional
-    public ReservationResponse confirmReservation(Long id) {
-        try {
-            Reservation reservation = findReservationById(id);
-            validator.validateStatusTransition(reservation, StatutReservation.CONFIRMED);
-            reservation.setStatut(StatutReservation.CONFIRMED);
-            return reservationMapper.toResponse(reservationDao.save(reservation));
-        } catch (Exception e) {
-            throw new ReservationException("Failed to confirm reservation: " + e.getMessage(), e);
-        }
+    public Map<String, Integer> getMostRequestedDepartureLocations() {
+        log.info("Fetching most requested departure locations");
+        return reservationRepository.findMostRequestedDepartureLocations()
+            .stream()
+            .collect(Collectors.toMap(
+                row -> (String) row[0],
+                row -> ((Number) row[1]).intValue(),
+                (existing, replacement) -> existing,
+                LinkedHashMap::new
+            ));
     }
-
     @Override
-    @Transactional
-    public ReservationResponse cancelReservation(Long id) {
-        Reservation reservation = findReservationById(id);
-        if (reservation.getStatut() == StatutReservation.COMPLETED) {
-            throw new IllegalStateException("Cannot cancel a completed reservation");
-        }
-        reservation.setStatut(StatutReservation.CANCELLED);
-        return reservationMapper.toResponse(reservationDao.save(reservation));
-    }
-
-    @Override
-    @Transactional
-    public ReservationResponse completeReservation(Long id) {
-        Reservation reservation = findReservationById(id);
-        validateReservationStatus(reservation, StatutReservation.CONFIRMED);
-        reservation.setStatut(StatutReservation.COMPLETED);
-        return reservationMapper.toResponse(reservationDao.save(reservation));
-    }
-
-    // @Override
-    // public boolean checkDriverAvailability(UUID driverId, LocalDateTime dateHeure) {
-    //     LocalDateTime endTime = dateHeure.plusHours(2); // Assuming 2-hour reservation duration
-    //     List<Reservation> overlapping = reservationRepository.findOverlappingReservations(
-    //         driverId, dateHeure, endTime);
+    public ReservationAnalytics getAnalytics() {
+        log.info("Generating reservation analytics");
         
-    //     if (!overlapping.isEmpty()) {
-    //         throw new IllegalStateException("Driver is not available at the requested time");
-    //     }
-        
-    //     return driverService.isAvailable(driverId, dateHeure);
-    // }
+        // Build hourly distribution map
+        Map<Integer, Integer> hourlyDistribution = reservationRepository.getReservationsByHourDistribution()
+            .stream()
+            .collect(Collectors.toMap(
+                row -> ((Number) row[0]).intValue(),
+                row -> ((Number) row[1]).intValue(),
+                (existing, replacement) -> existing,
+                TreeMap::new  // Ensures ordered by hour
+            ));
+
+        // Build location counts
+        List<ReservationAnalytics.LocationCount> locationCounts = reservationRepository
+            .findMostRequestedDepartureLocations()
+            .stream()
+            .map(row -> ReservationAnalytics.LocationCount.builder()
+                .location((String) row[0])
+                .count(((Number) row[1]).longValue())
+                .build())
+            .collect(Collectors.toList());
+
+        // Build time slot distribution
+        Map<String, Integer> timeSlotDistribution = reservationRepository.getReservationsByTimeSlot()
+            .stream()
+            .collect(Collectors.toMap(
+                row -> (String) row[0],
+                row -> ((Number) row[1]).intValue(),
+                (existing, replacement) -> existing,
+                LinkedHashMap::new  // Preserves order
+            ));
+
+        // Build price per km by vehicle type
+        Map<String, Double> pricePerKmByVehicleType = reservationRepository
+            .getAveragePricePerKmByVehicleType()
+            .stream()
+            .collect(Collectors.toMap(
+                row -> ((Enum<?>) row[0]).name(),
+                row -> ((Number) row[1]).doubleValue(),
+                (existing, replacement) -> existing,
+                HashMap::new
+            ));
+
+        // Handle potential null values from averages
+        Double avgPricePerKm = getAveragePricePerKm();
+        Double avgDistance = getAverageDistance();
+
+        return ReservationAnalytics.builder()
+            .averagePricePerKm(avgPricePerKm != null ? avgPricePerKm : 0.0)
+            .averageDistance(avgDistance != null ? avgDistance : 0.0)
+            .hourlyDistribution(hourlyDistribution)
+            .mostRequestedLocations(locationCounts)
+            .timeSlotDistribution(timeSlotDistribution)
+            .pricePerKmByVehicleType(pricePerKmByVehicleType)
+            .build();
+    }
 
     @Override
-    public boolean checkVehicleAvailability(UUID vehiculeId, LocalDateTime dateHeure) {
-        if (reservationRepository.hasActiveReservations(vehiculeId)) {
-            throw new IllegalStateException("Vehicle is not available at the requested time");
-        }
+    public boolean checkDriverAvailability(Long driverId, LocalDateTime dateTime) {
+        log.info("Checking driver availability for ID: {} at {}", driverId, dateTime);
         
-        return vehicleService.isAvailable(vehiculeId, dateHeure);
+        // Calculate time window (e.g., ±2 hours around the requested time)
+        LocalDateTime startTime = dateTime.minusHours(2);
+        LocalDateTime endTime = dateTime.plusHours(2);
+        
+        // Check for overlapping reservations
+        List<Reservation> overlappingReservations = reservationRepository.findOverlappingReservations(
+            driverId, startTime, endTime
+        );
+        
+        return overlappingReservations.isEmpty();
+    }
+
+    @Override
+    public boolean checkVehicleAvailability(UUID vehicleId, LocalDateTime dateTime) {
+        log.info("Checking vehicle availability for ID: {} at {}", vehicleId, dateTime);
+        
+        // Calculate time window (e.g., ±2 hours around the requested time)
+        LocalDateTime startTime = dateTime.minusHours(2);
+        LocalDateTime endTime = dateTime.plusHours(2);
+        
+        // Use the existing repository method
+        return !reservationRepository.hasActiveReservations(vehicleId, startTime, endTime);
     }
 
     private Reservation findReservationById(Long id) {
-        return reservationDao.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found with id: " + id));
+        return reservationRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Reservation not found with id: " + id));
     }
-
-    private void validateReservationStatus(Reservation reservation, StatutReservation expectedStatus) {
-        if (reservation.getStatut() != expectedStatus) {
-            throw new IllegalStateException(
-                "Invalid reservation status. Expected: " + expectedStatus + 
-                ", but was: " + reservation.getStatut());
-        }
-    }
-} 
+}
