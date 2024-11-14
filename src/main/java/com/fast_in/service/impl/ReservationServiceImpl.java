@@ -4,9 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.TreeMap;
+import java.util.LinkedHashMap;
+import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,13 @@ import com.fast_in.exception.ReservationException;
 import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.mapper.ReservationMapper;
 import com.fast_in.model.Reservation;
-import com.fast_in.model.Driver;
-import com.fast_in.model.Vehicle;
 import com.fast_in.model.enums.ReservationStatus;
 import com.fast_in.repository.ReservationRepository;
-import com.fast_in.service.DriverService;
 import com.fast_in.service.ReservationService;
-import com.fast_in.service.VehicleService;
 import com.fast_in.utils.PriceCalculator;
 import com.fast_in.validation.ReservationValidator;
+import com.fast_in.dto.response.ReservationAnalytics;
+import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,6 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationMapper reservationMapper;
     private final ReservationValidator validator;
     private final PriceCalculator priceCalculator;
-    private final ReservationDao reservationDao;
 
     @Override
     @Transactional
@@ -72,7 +70,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Page<ReservationResponse> getAllReservations(Pageable pageable) {
         return reservationRepository.findAll(pageable)
-            .map(reservationMapper::toResponse);
+            .map(reservation -> reservationMapper.toResponse(reservation));
     }
 
     @Override
@@ -153,23 +151,115 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Object[]> getReservationsByHourDistribution() {
-        return reservationRepository.getReservationsByHourDistribution();
+    public Map<Integer, Integer> getReservationsByHourDistribution() {
+        log.info("Fetching hourly distribution of reservations");
+        return reservationRepository.getReservationsByHourDistribution()
+            .stream()
+            .collect(Collectors.toMap(
+                row -> ((Number) row[0]).intValue(),
+                row -> ((Number) row[1]).intValue(),
+                (existing, replacement) -> existing,
+                TreeMap::new
+            ));
     }
-
+    
     @Override
-    public List<Object[]> getMostRequestedDepartureLocations() {
-        return reservationRepository.findMostRequestedDepartureLocations();
+    public Map<String, Integer> getMostRequestedDepartureLocations() {
+        log.info("Fetching most requested departure locations");
+        return reservationRepository.findMostRequestedDepartureLocations()
+            .stream()
+            .collect(Collectors.toMap(
+                row -> (String) row[0],
+                row -> ((Number) row[1]).intValue(),
+                (existing, replacement) -> existing,
+                LinkedHashMap::new
+            ));
     }
-
     @Override
     public ReservationAnalytics getAnalytics() {
+        log.info("Generating reservation analytics");
+        
+        // Build hourly distribution map
+        Map<Integer, Integer> hourlyDistribution = reservationRepository.getReservationsByHourDistribution()
+            .stream()
+            .collect(Collectors.toMap(
+                row -> ((Number) row[0]).intValue(),
+                row -> ((Number) row[1]).intValue(),
+                (existing, replacement) -> existing,
+                TreeMap::new  // Ensures ordered by hour
+            ));
+
+        // Build location counts
+        List<ReservationAnalytics.LocationCount> locationCounts = reservationRepository
+            .findMostRequestedDepartureLocations()
+            .stream()
+            .map(row -> ReservationAnalytics.LocationCount.builder()
+                .location((String) row[0])
+                .count(((Number) row[1]).longValue())
+                .build())
+            .collect(Collectors.toList());
+
+        // Build time slot distribution
+        Map<String, Integer> timeSlotDistribution = reservationRepository.getReservationsByTimeSlot()
+            .stream()
+            .collect(Collectors.toMap(
+                row -> (String) row[0],
+                row -> ((Number) row[1]).intValue(),
+                (existing, replacement) -> existing,
+                LinkedHashMap::new  // Preserves order
+            ));
+
+        // Build price per km by vehicle type
+        Map<String, Double> pricePerKmByVehicleType = reservationRepository
+            .getAveragePricePerKmByVehicleType()
+            .stream()
+            .collect(Collectors.toMap(
+                row -> ((Enum<?>) row[0]).name(),
+                row -> ((Number) row[1]).doubleValue(),
+                (existing, replacement) -> existing,
+                HashMap::new
+            ));
+
+        // Handle potential null values from averages
+        Double avgPricePerKm = getAveragePricePerKm();
+        Double avgDistance = getAverageDistance();
+
         return ReservationAnalytics.builder()
-            .averagePricePerKm(getAveragePricePerKm())
-            .averageDistance(getAverageDistance())
-            .hourlyDistribution(getReservationsByHourDistribution())
-            .mostRequestedLocations(getMostRequestedDepartureLocations())
+            .averagePricePerKm(avgPricePerKm != null ? avgPricePerKm : 0.0)
+            .averageDistance(avgDistance != null ? avgDistance : 0.0)
+            .hourlyDistribution(hourlyDistribution)
+            .mostRequestedLocations(locationCounts)
+            .timeSlotDistribution(timeSlotDistribution)
+            .pricePerKmByVehicleType(pricePerKmByVehicleType)
             .build();
+    }
+
+    @Override
+    public boolean checkDriverAvailability(Long driverId, LocalDateTime dateTime) {
+        log.info("Checking driver availability for ID: {} at {}", driverId, dateTime);
+        
+        // Calculate time window (e.g., ±2 hours around the requested time)
+        LocalDateTime startTime = dateTime.minusHours(2);
+        LocalDateTime endTime = dateTime.plusHours(2);
+        
+        // Check for overlapping reservations
+        List<Reservation> overlappingReservations = reservationRepository.findOverlappingReservations(
+            driverId, startTime, endTime
+        );
+        
+        return overlappingReservations.isEmpty();
+    }
+
+    @Override
+    public boolean checkVehicleAvailability(UUID vehicleId, LocalDateTime dateTime) {
+        log.info("Checking vehicle availability for ID: {} at {}", vehicleId, dateTime);
+        
+        // Calculate time window (e.g., ±2 hours around the requested time)
+        LocalDateTime startTime = dateTime.minusHours(2);
+        LocalDateTime endTime = dateTime.plusHours(2);
+        
+        // Use the existing repository method
+        return !reservationRepository.hasActiveReservations(vehicleId, startTime, endTime);
     }
 
     private Reservation findReservationById(Long id) {

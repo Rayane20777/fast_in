@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fast_in.model.Address;
 import com.fast_in.model.Vehicle;
+import com.fast_in.model.enums.VehicleType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -58,5 +59,10 @@ public class ReservationRequest {
     @NotNull(message = "Vehicle is required")
     @Valid
     private Vehicle vehicle;
+
+    @Schema(description = "Vehicle type getter")
+    public VehicleType getVehicleType() {
+        return vehicle != null ? vehicle.getType() : null;
+    }
     
 }

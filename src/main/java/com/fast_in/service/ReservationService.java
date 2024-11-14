@@ -1,7 +1,7 @@
 package com.fast_in.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import com.fast_in.dto.request.ReservationRequest;
 import com.fast_in.dto.response.ReservationResponse;
 import com.fast_in.dto.response.ReservationAnalytics;
-import com.fast_in.model.enums.ReservationStatus;
 
 public interface ReservationService {
     // CRUD operations
@@ -28,7 +27,12 @@ public interface ReservationService {
     // Analytics methods as specified in requirements
     Double getAveragePricePerKm();
     Double getAverageDistance();
-    List<Object[]> getReservationsByHourDistribution();
-    List<Object[]> getMostRequestedDepartureLocations();
+    Map<Integer, Integer> getReservationsByHourDistribution();
+    Map<String, Integer> getMostRequestedDepartureLocations();
     ReservationAnalytics getAnalytics();
+
+    boolean checkDriverAvailability(Long driverId, LocalDateTime dateTime);
+    boolean checkVehicleAvailability(UUID vehicleId, LocalDateTime dateTime);
+
+
 }
