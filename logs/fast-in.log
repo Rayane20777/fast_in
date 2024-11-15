@@ -664,3 +664,214 @@ Caused by: java.lang.ClassNotFoundException: com.fast_in.dto.request.VehicleRequ
 2024-11-15 11:25:07 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
 2024-11-15 11:25:07 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path '/api/v1'
 2024-11-15 11:25:07 [restartedMain] INFO  com.fast_in.FastInApplication - Started FastInApplication in 2.75 seconds (JVM running for 3.262)
+2024-11-15 11:38:35 [http-nio-8081-exec-3] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-15 11:38:35 [http-nio-8081-exec-3] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-11-15 11:38:35 [http-nio-8081-exec-3] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2024-11-15 11:38:45 [http-nio-8081-exec-2] DEBUG org.hibernate.SQL - select vehicle0_.id as id1_2_, vehicle0_.mileage as mileage2_2_, vehicle0_.model as model3_2_, vehicle0_.registration_number as registra4_2_, vehicle0_.status as status5_2_, vehicle0_.type as type6_2_ from vehicle vehicle0_
+2024-11-15 11:38:54 [http-nio-8081-exec-4] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `com.fast_in.model.enums.VehicleType` from String "SUV": not one of the values accepted for Enum class: [MINIBUS, VAN, SEDAN]; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `com.fast_in.model.enums.VehicleType` from String "SUV": not one of the values accepted for Enum class: [MINIBUS, VAN, SEDAN]<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 6, column: 13] (through reference chain: com.fast_in.dto.request.VehicleRequest["type"])]
+2024-11-15 11:40:40 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications)
+2024-11-15 11:40:40 [Thread-12] INFO  o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:40:40 [Thread-12] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2024-11-15 11:40:40 [Thread-12] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Destroying Spring FrameworkServlet 'dispatcherServlet'
+2024-11-15 11:40:40 [Thread-12] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:40:40 [Thread-12] INFO  o.a.coyote.http11.Http11NioProtocol - Destroying ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:40:40 [Thread-12] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-15 11:40:40 [Thread-12] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2024-11-15 11:40:40 [Thread-12] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2024-11-15 11:40:40 [Thread-12] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2024-11-15 11:40:40 [restartedMain] INFO  com.fast_in.FastInApplication - Starting FastInApplication using Java 1.8.0_422 on DESKTOP-0G1GGOD with PID 22164 (C:\Users\rayane\IdeaProjects\fast_in\target\classes started by rayane in C:\Users\rayane\IdeaProjects\fast_in)
+2024-11-15 11:40:40 [restartedMain] DEBUG com.fast_in.FastInApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2024-11-15 11:40:40 [restartedMain] INFO  com.fast_in.FastInApplication - The following 1 profile is active: "dev"
+2024-11-15 11:40:40 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-15 11:40:40 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 14 ms. Found 4 JPA repository interfaces.
+2024-11-15 11:40:40 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2024-11-15 11:40:40 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:40:40 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-11-15 11:40:40 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2024-11-15 11:40:40 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Initializing Spring embedded WebApplicationContext
+2024-11-15 11:40:40 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 224 ms
+2024-11-15 11:40:40 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2024-11-15 11:40:40 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2024-11-15 11:40:40 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:fast_in_db'
+2024-11-15 11:40:40 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-15 11:40:40 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-11-15 11:40:40 [restartedMain] DEBUG org.hibernate.SQL - create table driver (id  bigserial not null, availability_end date not null, availability_start date not null, first_name varchar(255), last_name varchar(255), status varchar(255) not null, primary key (id))
+2024-11-15 11:40:40 [restartedMain] DEBUG org.hibernate.SQL - create table reservation (id  bigserial not null, quartier_arrivee varchar(255) not null, ville_arrivee varchar(255) not null, cancelled_at timestamp, completed_at timestamp, confirmed_at timestamp, course_end_time timestamp, course_start_time timestamp, created_at timestamp not null, date_heure timestamp not null, quartier_depart varchar(255) not null, ville_depart varchar(255) not null, distance_km float8 not null, price float8 not null, status varchar(255) not null, updated_at timestamp, driver_id int8 not null, vehicle_id uuid not null, primary key (id))
+2024-11-15 11:40:40 [restartedMain] DEBUG org.hibernate.SQL - create table vehicle (id uuid not null, mileage float8 not null, model varchar(255) not null, registration_number varchar(255) not null, status varchar(255), type varchar(255), primary key (id))
+2024-11-15 11:40:40 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FKiabmugn54sqbxjcpujig6tawg foreign key (driver_id) references driver
+2024-11-15 11:40:40 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FKrm327sr0rb11mme0kbsm37od5 foreign key (vehicle_id) references vehicle
+2024-11-15 11:40:40 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-15 11:40:40 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-15 11:40:41 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-11-15 11:40:41 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:40:41 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path '/api/v1'
+2024-11-15 11:40:41 [restartedMain] INFO  com.fast_in.FastInApplication - Started FastInApplication in 0.487 seconds (JVM running for 936.689)
+2024-11-15 11:40:41 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2024-11-15 11:40:42 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+2024-11-15 11:40:42 [Thread-18] INFO  o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:40:42 [Thread-18] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2024-11-15 11:40:42 [Thread-18] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:40:42 [Thread-18] INFO  o.a.coyote.http11.Http11NioProtocol - Destroying ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:40:42 [Thread-18] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-15 11:40:42 [Thread-18] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2024-11-15 11:40:42 [Thread-18] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown initiated...
+2024-11-15 11:40:42 [Thread-18] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Shutdown completed.
+2024-11-15 11:40:43 [restartedMain] INFO  com.fast_in.FastInApplication - Starting FastInApplication using Java 1.8.0_422 on DESKTOP-0G1GGOD with PID 22164 (C:\Users\rayane\IdeaProjects\fast_in\target\classes started by rayane in C:\Users\rayane\IdeaProjects\fast_in)
+2024-11-15 11:40:43 [restartedMain] DEBUG com.fast_in.FastInApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2024-11-15 11:40:43 [restartedMain] INFO  com.fast_in.FastInApplication - The following 1 profile is active: "dev"
+2024-11-15 11:40:43 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-15 11:40:43 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 4 JPA repository interfaces.
+2024-11-15 11:40:43 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2024-11-15 11:40:43 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:40:43 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-11-15 11:40:43 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2024-11-15 11:40:43 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Initializing Spring embedded WebApplicationContext
+2024-11-15 11:40:43 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 210 ms
+2024-11-15 11:40:43 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Starting...
+2024-11-15 11:40:43 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Start completed.
+2024-11-15 11:40:43 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:fast_in_db'
+2024-11-15 11:40:43 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-15 11:40:43 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-11-15 11:40:43 [restartedMain] DEBUG org.hibernate.SQL - create table driver (id  bigserial not null, availability_end date not null, availability_start date not null, first_name varchar(255), last_name varchar(255), status varchar(255) not null, primary key (id))
+2024-11-15 11:40:43 [restartedMain] DEBUG org.hibernate.SQL - create table reservation (id  bigserial not null, quartier_arrivee varchar(255) not null, ville_arrivee varchar(255) not null, cancelled_at timestamp, completed_at timestamp, confirmed_at timestamp, course_end_time timestamp, course_start_time timestamp, created_at timestamp not null, date_heure timestamp not null, quartier_depart varchar(255) not null, ville_depart varchar(255) not null, distance_km float8 not null, price float8 not null, status varchar(255) not null, updated_at timestamp, driver_id int8 not null, vehicle_id uuid not null, primary key (id))
+2024-11-15 11:40:43 [restartedMain] DEBUG org.hibernate.SQL - create table vehicle (id uuid not null, mileage float8 not null, model varchar(255) not null, registration_number varchar(255) not null, status varchar(255), type varchar(255), primary key (id))
+2024-11-15 11:40:43 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FKiabmugn54sqbxjcpujig6tawg foreign key (driver_id) references driver
+2024-11-15 11:40:43 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FKrm327sr0rb11mme0kbsm37od5 foreign key (vehicle_id) references vehicle
+2024-11-15 11:40:43 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-15 11:40:43 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-15 11:40:43 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-11-15 11:40:43 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:40:43 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path '/api/v1'
+2024-11-15 11:40:43 [restartedMain] INFO  com.fast_in.FastInApplication - Started FastInApplication in 0.439 seconds (JVM running for 939.095)
+2024-11-15 11:40:43 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2024-11-15 11:40:46 [http-nio-8081-exec-4] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-15 11:40:46 [http-nio-8081-exec-4] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-11-15 11:40:46 [http-nio-8081-exec-4] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2024-11-15 11:40:46 [http-nio-8081-exec-4] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `com.fast_in.model.enums.VehicleType` from String "SUV": not one of the values accepted for Enum class: [MINIBUS, VAN, SEDAN]; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `com.fast_in.model.enums.VehicleType` from String "SUV": not one of the values accepted for Enum class: [MINIBUS, VAN, SEDAN]<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 6, column: 13] (through reference chain: com.fast_in.dto.request.VehicleRequest["type"])]
+2024-11-15 11:41:00 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications)
+2024-11-15 11:41:00 [Thread-22] INFO  o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:41:00 [Thread-22] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2024-11-15 11:41:00 [Thread-22] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Destroying Spring FrameworkServlet 'dispatcherServlet'
+2024-11-15 11:41:00 [Thread-22] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:41:00 [Thread-22] INFO  o.a.coyote.http11.Http11NioProtocol - Destroying ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:41:00 [Thread-22] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-15 11:41:00 [Thread-22] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2024-11-15 11:41:00 [Thread-22] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown initiated...
+2024-11-15 11:41:00 [Thread-22] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-3 - Shutdown completed.
+2024-11-15 11:41:00 [restartedMain] INFO  com.fast_in.FastInApplication - Starting FastInApplication using Java 1.8.0_422 on DESKTOP-0G1GGOD with PID 22164 (C:\Users\rayane\IdeaProjects\fast_in\target\classes started by rayane in C:\Users\rayane\IdeaProjects\fast_in)
+2024-11-15 11:41:00 [restartedMain] DEBUG com.fast_in.FastInApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2024-11-15 11:41:00 [restartedMain] INFO  com.fast_in.FastInApplication - The following 1 profile is active: "dev"
+2024-11-15 11:41:00 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-15 11:41:00 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 12 ms. Found 4 JPA repository interfaces.
+2024-11-15 11:41:00 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2024-11-15 11:41:00 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:41:00 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-11-15 11:41:00 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2024-11-15 11:41:00 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Initializing Spring embedded WebApplicationContext
+2024-11-15 11:41:00 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 175 ms
+2024-11-15 11:41:00 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting...
+2024-11-15 11:41:00 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed.
+2024-11-15 11:41:00 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:fast_in_db'
+2024-11-15 11:41:00 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-15 11:41:00 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-11-15 11:41:01 [restartedMain] DEBUG org.hibernate.SQL - create table driver (id  bigserial not null, availability_end date not null, availability_start date not null, first_name varchar(255), last_name varchar(255), status varchar(255) not null, primary key (id))
+2024-11-15 11:41:01 [restartedMain] DEBUG org.hibernate.SQL - create table reservation (id  bigserial not null, quartier_arrivee varchar(255) not null, ville_arrivee varchar(255) not null, cancelled_at timestamp, completed_at timestamp, confirmed_at timestamp, course_end_time timestamp, course_start_time timestamp, created_at timestamp not null, date_heure timestamp not null, quartier_depart varchar(255) not null, ville_depart varchar(255) not null, distance_km float8 not null, price float8 not null, status varchar(255) not null, updated_at timestamp, driver_id int8 not null, vehicle_id uuid not null, primary key (id))
+2024-11-15 11:41:01 [restartedMain] DEBUG org.hibernate.SQL - create table vehicle (id uuid not null, mileage float8 not null, model varchar(255) not null, registration_number varchar(255) not null, status varchar(255), type varchar(255), primary key (id))
+2024-11-15 11:41:01 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FKiabmugn54sqbxjcpujig6tawg foreign key (driver_id) references driver
+2024-11-15 11:41:01 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FKrm327sr0rb11mme0kbsm37od5 foreign key (vehicle_id) references vehicle
+2024-11-15 11:41:01 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-15 11:41:01 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-15 11:41:01 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-11-15 11:41:01 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:41:01 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path '/api/v1'
+2024-11-15 11:41:01 [restartedMain] INFO  com.fast_in.FastInApplication - Started FastInApplication in 0.406 seconds (JVM running for 956.786)
+2024-11-15 11:41:01 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2024-11-15 11:41:03 [File Watcher] INFO  o.s.b.d.a.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener - Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+2024-11-15 11:41:03 [Thread-26] INFO  o.a.coyote.http11.Http11NioProtocol - Pausing ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:41:03 [Thread-26] INFO  o.a.catalina.core.StandardService - Stopping service [Tomcat]
+2024-11-15 11:41:03 [Thread-26] INFO  o.a.coyote.http11.Http11NioProtocol - Stopping ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:41:03 [Thread-26] INFO  o.a.coyote.http11.Http11NioProtocol - Destroying ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:41:03 [Thread-26] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-15 11:41:04 [Thread-26] WARN  o.s.b.f.s.DisposableBeanAdapter - Invocation of destroy method failed on bean with name 'inMemoryDatabaseShutdownExecutor': org.h2.jdbc.JdbcSQLNonTransientConnectionException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214]
+2024-11-15 11:41:04 [Thread-26] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown initiated...
+2024-11-15 11:41:04 [Thread-26] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Shutdown completed.
+2024-11-15 11:41:04 [restartedMain] INFO  com.fast_in.FastInApplication - Starting FastInApplication using Java 1.8.0_422 on DESKTOP-0G1GGOD with PID 22164 (C:\Users\rayane\IdeaProjects\fast_in\target\classes started by rayane in C:\Users\rayane\IdeaProjects\fast_in)
+2024-11-15 11:41:04 [restartedMain] DEBUG com.fast_in.FastInApplication - Running with Spring Boot v2.7.18, Spring v5.3.31
+2024-11-15 11:41:04 [restartedMain] INFO  com.fast_in.FastInApplication - The following 1 profile is active: "dev"
+2024-11-15 11:41:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-15 11:41:04 [restartedMain] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 24 ms. Found 4 JPA repository interfaces.
+2024-11-15 11:41:04 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8081 (http)
+2024-11-15 11:41:04 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:41:04 [restartedMain] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2024-11-15 11:41:04 [restartedMain] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.83]
+2024-11-15 11:41:04 [restartedMain] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Initializing Spring embedded WebApplicationContext
+2024-11-15 11:41:04 [restartedMain] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 199 ms
+2024-11-15 11:41:04 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Starting...
+2024-11-15 11:41:04 [restartedMain] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Start completed.
+2024-11-15 11:41:04 [restartedMain] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:fast_in_db'
+2024-11-15 11:41:04 [restartedMain] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-15 11:41:04 [restartedMain] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-11-15 11:41:04 [restartedMain] DEBUG org.hibernate.SQL - create table driver (id  bigserial not null, availability_end date not null, availability_start date not null, first_name varchar(255), last_name varchar(255), status varchar(255) not null, primary key (id))
+2024-11-15 11:41:04 [restartedMain] DEBUG org.hibernate.SQL - create table reservation (id  bigserial not null, quartier_arrivee varchar(255) not null, ville_arrivee varchar(255) not null, cancelled_at timestamp, completed_at timestamp, confirmed_at timestamp, course_end_time timestamp, course_start_time timestamp, created_at timestamp not null, date_heure timestamp not null, quartier_depart varchar(255) not null, ville_depart varchar(255) not null, distance_km float8 not null, price float8 not null, status varchar(255) not null, updated_at timestamp, driver_id int8 not null, vehicle_id uuid not null, primary key (id))
+2024-11-15 11:41:04 [restartedMain] DEBUG org.hibernate.SQL - create table vehicle (id uuid not null, mileage float8 not null, model varchar(255) not null, registration_number varchar(255) not null, status varchar(255), type varchar(255), primary key (id))
+2024-11-15 11:41:04 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FKiabmugn54sqbxjcpujig6tawg foreign key (driver_id) references driver
+2024-11-15 11:41:04 [restartedMain] DEBUG org.hibernate.SQL - alter table reservation add constraint FKrm327sr0rb11mme0kbsm37od5 foreign key (vehicle_id) references vehicle
+2024-11-15 11:41:04 [restartedMain] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-15 11:41:04 [restartedMain] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-15 11:41:04 [restartedMain] INFO  o.s.b.d.a.OptionalLiveReloadServer - LiveReload server is running on port 35729
+2024-11-15 11:41:04 [restartedMain] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2024-11-15 11:41:04 [restartedMain] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8081 (http) with context path '/api/v1'
+2024-11-15 11:41:04 [restartedMain] INFO  com.fast_in.FastInApplication - Started FastInApplication in 0.44 seconds (JVM running for 960.22)
+2024-11-15 11:41:04 [restartedMain] INFO  o.s.b.d.a.ConditionEvaluationDeltaLoggingListener - Condition evaluation unchanged
+2024-11-15 11:41:12 [http-nio-8081-exec-8] INFO  o.a.c.c.C.[.[localhost].[/api/v1] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-15 11:41:12 [http-nio-8081-exec-8] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2024-11-15 11:41:12 [http-nio-8081-exec-8] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2024-11-15 11:41:12 [http-nio-8081-exec-8] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `com.fast_in.model.enums.VehicleType` from String "SUV": not one of the values accepted for Enum class: [MINIBUS, VAN, SEDAN]; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `com.fast_in.model.enums.VehicleType` from String "SUV": not one of the values accepted for Enum class: [MINIBUS, VAN, SEDAN]<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 6, column: 13] (through reference chain: com.fast_in.dto.request.VehicleRequest["type"])]
+2024-11-15 11:41:28 [http-nio-8081-exec-4] DEBUG org.hibernate.SQL - insert into vehicle (mileage, model, registration_number, status, type, id) values (?, ?, ?, ?, ?, ?)
+2024-11-15 11:41:28 [http-nio-8081-exec-4] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [DOUBLE] - [150.12]
+2024-11-15 11:41:28 [http-nio-8081-exec-4] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [2] as [VARCHAR] - [Model X]
+2024-11-15 11:41:28 [http-nio-8081-exec-4] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [3] as [VARCHAR] - [ABC123]
+2024-11-15 11:41:28 [http-nio-8081-exec-4] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [4] as [VARCHAR] - [AVAILABLE]
+2024-11-15 11:41:28 [http-nio-8081-exec-4] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [5] as [VARCHAR] - [VAN]
+2024-11-15 11:41:28 [http-nio-8081-exec-4] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [6] as [OTHER] - [d79e0166-6cd8-4f4c-9e99-92eda7f9ebbc]
+2024-11-15 11:41:54 [http-nio-8081-exec-3] DEBUG org.hibernate.SQL - select vehicle0_.id as id1_2_0_, vehicle0_.mileage as mileage2_2_0_, vehicle0_.model as model3_2_0_, vehicle0_.registration_number as registra4_2_0_, vehicle0_.status as status5_2_0_, vehicle0_.type as type6_2_0_ from vehicle vehicle0_ where vehicle0_.id=?
+2024-11-15 11:41:54 [http-nio-8081-exec-3] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [OTHER] - [d79e0166-6cd8-4f4c-9e99-92eda7f9ebbc]
+2024-11-15 11:41:57 [http-nio-8081-exec-6] DEBUG org.hibernate.SQL - select vehicle0_.id as id1_2_0_, vehicle0_.mileage as mileage2_2_0_, vehicle0_.model as model3_2_0_, vehicle0_.registration_number as registra4_2_0_, vehicle0_.status as status5_2_0_, vehicle0_.type as type6_2_0_ from vehicle vehicle0_ where vehicle0_.id=?
+2024-11-15 11:41:57 [http-nio-8081-exec-6] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [OTHER] - [d79e0166-6cd8-4f4c-9e99-092eda7f9ebb]
+2024-11-15 11:41:57 [http-nio-8081-exec-6] WARN  o.s.w.s.m.a.ResponseStatusExceptionResolver - Resolved [org.springframework.web.server.ResponseStatusException: 404 NOT_FOUND "Vehicle Not Found!"]
+2024-11-15 11:42:05 [http-nio-8081-exec-7] DEBUG org.hibernate.SQL - select vehicle0_.id as id1_2_0_, vehicle0_.mileage as mileage2_2_0_, vehicle0_.model as model3_2_0_, vehicle0_.registration_number as registra4_2_0_, vehicle0_.status as status5_2_0_, vehicle0_.type as type6_2_0_ from vehicle vehicle0_ where vehicle0_.id=?
+2024-11-15 11:42:05 [http-nio-8081-exec-7] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [OTHER] - [d79e0166-6cd8-4f4c-9e99-92eda7f9ebbc]
+2024-11-15 11:42:05 [http-nio-8081-exec-7] DEBUG org.hibernate.SQL - update vehicle set mileage=?, model=?, registration_number=?, status=?, type=? where id=?
+2024-11-15 11:42:05 [http-nio-8081-exec-7] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [DOUBLE] - [150.12]
+2024-11-15 11:42:05 [http-nio-8081-exec-7] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [2] as [VARCHAR] - [Model X]
+2024-11-15 11:42:05 [http-nio-8081-exec-7] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [3] as [VARCHAR] - [BC123]
+2024-11-15 11:42:05 [http-nio-8081-exec-7] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [4] as [VARCHAR] - [AVAILABLE]
+2024-11-15 11:42:05 [http-nio-8081-exec-7] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [5] as [VARCHAR] - [VAN]
+2024-11-15 11:42:05 [http-nio-8081-exec-7] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [6] as [OTHER] - [d79e0166-6cd8-4f4c-9e99-92eda7f9ebbc]
+2024-11-15 11:42:10 [http-nio-8081-exec-2] DEBUG org.hibernate.SQL - select vehicle0_.id as id1_2_0_, vehicle0_.mileage as mileage2_2_0_, vehicle0_.model as model3_2_0_, vehicle0_.registration_number as registra4_2_0_, vehicle0_.status as status5_2_0_, vehicle0_.type as type6_2_0_ from vehicle vehicle0_ where vehicle0_.id=?
+2024-11-15 11:42:10 [http-nio-8081-exec-2] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [OTHER] - [d79e0166-6cd8-4f4c-9e99-92eda7f9ebbc]
+2024-11-15 11:42:15 [http-nio-8081-exec-5] DEBUG org.hibernate.SQL - select vehicle0_.id as id1_2_0_, vehicle0_.mileage as mileage2_2_0_, vehicle0_.model as model3_2_0_, vehicle0_.registration_number as registra4_2_0_, vehicle0_.status as status5_2_0_, vehicle0_.type as type6_2_0_ from vehicle vehicle0_ where vehicle0_.id=?
+2024-11-15 11:42:15 [http-nio-8081-exec-5] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [OTHER] - [d79e0166-6cd8-4f4c-9e99-92eda7f9ebbc]
+2024-11-15 11:42:15 [http-nio-8081-exec-5] DEBUG org.hibernate.SQL - delete from vehicle where id=?
+2024-11-15 11:42:15 [http-nio-8081-exec-5] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [OTHER] - [d79e0166-6cd8-4f4c-9e99-92eda7f9ebbc]
+2024-11-15 11:42:20 [http-nio-8081-exec-10] DEBUG org.hibernate.SQL - select vehicle0_.id as id1_2_0_, vehicle0_.mileage as mileage2_2_0_, vehicle0_.model as model3_2_0_, vehicle0_.registration_number as registra4_2_0_, vehicle0_.status as status5_2_0_, vehicle0_.type as type6_2_0_ from vehicle vehicle0_ where vehicle0_.id=?
+2024-11-15 11:42:20 [http-nio-8081-exec-10] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [OTHER] - [d79e0166-6cd8-4f4c-9e99-92eda7f9ebbc]
+2024-11-15 11:42:20 [http-nio-8081-exec-10] WARN  o.s.w.s.m.a.ResponseStatusExceptionResolver - Resolved [org.springframework.web.server.ResponseStatusException: 404 NOT_FOUND "Vehicle Not Found!"]
+2024-11-15 11:42:51 [http-nio-8081-exec-1] DEBUG org.hibernate.SQL - insert into vehicle (mileage, model, registration_number, status, type, id) values (?, ?, ?, ?, ?, ?)
+2024-11-15 11:42:51 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [DOUBLE] - [150.12]
+2024-11-15 11:42:51 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [2] as [VARCHAR] - [Model X]
+2024-11-15 11:42:51 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [3] as [VARCHAR] - [BC123]
+2024-11-15 11:42:51 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [4] as [VARCHAR] - [AVAILABLE]
+2024-11-15 11:42:51 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [5] as [VARCHAR] - [VAN]
+2024-11-15 11:42:51 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [6] as [OTHER] - [45acf0dd-75b4-4189-9db7-1843e838642f]
+2024-11-15 11:43:32 [http-nio-8081-exec-8] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public com.fast_in.dto.response.DriverResponse com.fast_in.controller.DriverController.create(com.fast_in.dto.request.DriverRequest) with 5 errors: [Field error in object 'driverRequest' on field 'firstName': rejected value [null]; codes [NotBlank.driverRequest.firstName,NotBlank.firstName,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [driverRequest.firstName,firstName]; arguments []; default message [firstName]]; default message [First name is required]] [Field error in object 'driverRequest' on field 'availabilityStart': rejected value [null]; codes [NotNull.driverRequest.availabilityStart,NotNull.availabilityStart,NotNull.java.time.LocalDate,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [driverRequest.availabilityStart,availabilityStart]; arguments []; default message [availabilityStart]]; default message [Availability start is required]] [Field error in object 'driverRequest' on field 'status': rejected value [null]; codes [NotNull.driverRequest.status,NotNull.status,NotNull.com.fast_in.model.enums.DriverStatut,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [driverRequest.status,status]; arguments []; default message [status]]; default message [Driver status is required]] [Field error in object 'driverRequest' on field 'availabilityEnd': rejected value [null]; codes [NotNull.driverRequest.availabilityEnd,NotNull.availabilityEnd,NotNull.java.time.LocalDate,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [driverRequest.availabilityEnd,availabilityEnd]; arguments []; default message [availabilityEnd]]; default message [Availability end is required]] [Field error in object 'driverRequest' on field 'lastName': rejected value [null]; codes [NotBlank.driverRequest.lastName,NotBlank.lastName,NotBlank.java.lang.String,NotBlank]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [driverRequest.lastName,lastName]; arguments []; default message [lastName]]; default message [Last name is required]] ]
+2024-11-15 11:45:33 [http-nio-8081-exec-4] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `com.fast_in.model.enums.DriverStatut` from String "ACTIVE": not one of the values accepted for Enum class: [UNAVAILABLE, AVAILABLE, ON_TRIP]; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `com.fast_in.model.enums.DriverStatut` from String "ACTIVE": not one of the values accepted for Enum class: [UNAVAILABLE, AVAILABLE, ON_TRIP]<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 4, column: 15] (through reference chain: com.fast_in.dto.request.DriverRequest["status"])]
+2024-11-15 11:46:27 [http-nio-8081-exec-6] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `com.fast_in.model.enums.DriverStatut` from String "ACTIVE": not one of the values accepted for Enum class: [UNAVAILABLE, AVAILABLE, ON_TRIP]; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `com.fast_in.model.enums.DriverStatut` from String "ACTIVE": not one of the values accepted for Enum class: [UNAVAILABLE, AVAILABLE, ON_TRIP]<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 4, column: 15] (through reference chain: com.fast_in.dto.request.DriverRequest["status"])]
+2024-11-15 11:46:58 [http-nio-8081-exec-5] WARN  o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `java.time.LocalDate` from String "123-456-7890": Failed to deserialize java.time.LocalDate: (java.time.format.DateTimeParseException) Text '123-456-7890' could not be parsed at index 0; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `java.time.LocalDate` from String "123-456-7890": Failed to deserialize java.time.LocalDate: (java.time.format.DateTimeParseException) Text '123-456-7890' could not be parsed at index 0<EOL> at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 5, column: 24] (through reference chain: com.fast_in.dto.request.DriverRequest["availabilityEnd"])]
+2024-11-15 11:47:14 [http-nio-8081-exec-1] DEBUG org.hibernate.SQL - insert into driver (availability_end, availability_start, first_name, last_name, status) values (?, ?, ?, ?, ?)
+2024-11-15 11:47:14 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [1] as [DATE] - [2023-10-31]
+2024-11-15 11:47:14 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [2] as [DATE] - [2023-10-01]
+2024-11-15 11:47:14 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [3] as [VARCHAR] - [John]
+2024-11-15 11:47:14 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [4] as [VARCHAR] - [Doe]
+2024-11-15 11:47:14 [http-nio-8081-exec-1] TRACE o.h.type.descriptor.sql.BasicBinder - binding parameter [5] as [VARCHAR] - [AVAILABLE]
+2024-11-15 11:47:58 [http-nio-8081-exec-9] DEBUG org.hibernate.SQL - select driver0_.id as id1_0_, driver0_.availability_end as availabi2_0_, driver0_.availability_start as availabi3_0_, driver0_.first_name as first_na4_0_, driver0_.last_name as last_nam5_0_, driver0_.status as status6_0_ from driver driver0_ limit ?

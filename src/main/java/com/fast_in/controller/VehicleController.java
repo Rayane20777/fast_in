@@ -57,6 +57,8 @@ public class VehicleController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle Not Found!"));
     }
 
+
+
     @Operation(summary = "Create a new vehicle", description = "Add a new vehicle to the system")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Vehicle created successfully"),
@@ -68,12 +70,17 @@ public class VehicleController {
         return vehicleService.save(vehicle);
     }
 
+
+
     @Operation(summary = "Delete a vehicle", description = "Remove a vehicle from the system by its ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Vehicle deleted successfully"),
         @ApiResponse(responseCode = "404", description = "Vehicle not found"),
         @ApiResponse(responseCode = "500", description = "Internal server error")
     })
+
+
+
     @DeleteMapping("/{id}")
     public void delete(@Parameter(description = "ID of the vehicle to be deleted", required = true) @PathVariable UUID id) {
         vehicleService.deleteById(id);
