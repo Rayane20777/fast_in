@@ -1,23 +1,24 @@
 package com.fast_in.service.impl;
 
-import com.fast_in.dto.request.VehicleRequest;
-import com.fast_in.dto.response.VehicleResponse;
-import com.fast_in.exception.ResourceNotFoundException;
-import com.fast_in.mapper.VehicleMapper;
-import com.fast_in.model.Vehicle;
-import com.fast_in.repository.VehicleRepository;
-import com.fast_in.service.VehicleService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.fast_in.dto.request.VehicleRequest;
+import com.fast_in.dto.response.VehicleResponse;
+import com.fast_in.mapper.VehicleMapper;
+import com.fast_in.model.Vehicle;
+import com.fast_in.repository.VehicleRepository;
+import com.fast_in.service.VehicleService;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

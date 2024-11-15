@@ -9,7 +9,7 @@
         "name": "Create Reservation",
         "request": {
           "method": "POST",
-          "url": "{{base_url}}/api/reservations",
+          "url": "{{base_url}}/api/v1/reservations",
           "header": [
             {
               "key": "Content-Type",
@@ -47,21 +47,21 @@
         "name": "Get Reservation by ID",
         "request": {
           "method": "GET",
-          "url": "{{base_url}}/api/reservations/1"
+          "url": "{{base_url}}/api/v1/reservations/1"
         }
       },
       {
         "name": "Get All Reservations",
         "request": {
           "method": "GET",
-          "url": "{{base_url}}/api/reservations?page=0&size=10&sort=dateTime,desc"
+          "url": "{{base_url}}/api/v1/reservations?page=0&size=10&sort=dateTime,desc"
         }
       },
       {
         "name": "Update Reservation",
         "request": {
           "method": "PUT",
-          "url": "{{base_url}}/api/reservations/1",
+          "url": "{{base_url}}/api/v1/reservations/1",
           "header": [
             {
               "key": "Content-Type",
@@ -99,49 +99,96 @@
         "name": "Delete Reservation",
         "request": {
           "method": "DELETE",
-          "url": "{{base_url}}/api/reservations/1"
+          "url": "{{base_url}}/api/v1/reservations/1"
         }
       },
       {
         "name": "Confirm Reservation",
         "request": {
           "method": "PATCH",
-          "url": "{{base_url}}/api/reservations/1/confirm"
+          "url": "{{base_url}}/api/v1/reservations/1/confirm"
         }
       },
       {
         "name": "Cancel Reservation",
         "request": {
           "method": "PATCH",
-          "url": "{{base_url}}/api/reservations/1/cancel"
+          "url": "{{base_url}}/api/v1/reservations/1/cancel"
         }
       },
       {
         "name": "Complete Reservation",
         "request": {
           "method": "PATCH",
-          "url": "{{base_url}}/api/reservations/1/complete"
+          "url": "{{base_url}}/api/v1/reservations/1/complete"
         }
       },
       {
         "name": "Check Driver Availability",
         "request": {
           "method": "GET",
-          "url": "{{base_url}}/api/reservations/check/driver?driverId=1&dateTime=2024-04-01T14:30:00"
+          "url": "{{base_url}}/api/v1/reservations/check/driver?driverId=1&dateTime=2024-04-01T14:30:00"
         }
       },
       {
         "name": "Check Vehicle Availability",
         "request": {
           "method": "GET",
-          "url": "{{base_url}}/api/reservations/check/vehicle?vehicleId=550e8400-e29b-41d4-a716-446655440000&dateTime=2024-04-01T14:30:00"
+          "url": "{{base_url}}/api/v1/reservations/check/vehicle?vehicleId=550e8400-e29b-41d4-a716-446655440000&dateTime=2024-04-01T14:30:00"
+        }
+      },
+      {
+        "name": "Create Driver",
+        "request": {
+          "method": "POST",
+          "url": "{{base_url}}/drivers",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": {
+              "firstName": "John",
+              "lastName": "Doe",
+              "email": "john.doe@example.com",
+              "phone": "+212600000000",
+              "licenseNumber": "AB123456",
+              "status": "AVAILABLE"
+            }
+          }
+        }
+      },
+      {
+        "name": "Create Vehicle",
+        "request": {
+          "method": "POST",
+          "url": "{{base_url}}/vehicles",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": {
+              "model": "Toyota Camry",
+              "registrationNumber": "123ABC",
+              "mileage": 50000.0,
+              "status": "AVAILABLE",
+              "type": "BERLINE"
+            }
+          }
         }
       }
     ],
     "variable": [
       {
         "key": "base_url",
-        "value": "http://localhost:8080",
+        "value": "http://localhost:8081",
         "type": "string"
       }
     ]

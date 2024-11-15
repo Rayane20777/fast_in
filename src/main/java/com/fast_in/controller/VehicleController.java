@@ -25,7 +25,7 @@ import com.fast_in.service.VehicleService;
 @RequestMapping("/api/vehicles")
 public class VehicleController {
 
-    @Autowired
+    @Autowired 
     private VehicleService vehicleService;
 
     @GetMapping
