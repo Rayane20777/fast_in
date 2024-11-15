@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import com.fast_in.dto.response.VehicleAnalytics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,5 +97,17 @@ public class VehicleController {
     @PutMapping("/{id}")
     public VehicleResponse update(@Parameter(description = "ID of the vehicle to be updated", required = true) @PathVariable UUID id, @Valid @RequestBody VehicleRequest vehicleRequest) {
         return vehicleService.update(id, vehicleRequest);
+    }
+
+
+    @GetMapping("/analytics")
+    @Operation(summary = "Get vehicle analytics", description = "Retrieve analytics data for vehicles")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Analytics data retrieved"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<VehicleAnalytics> getAnalytics() {
+        VehicleAnalytics analytics = vehicleService.getVehicleAnalytics();
+        return ResponseEntity.ok(analytics);
     }
 }

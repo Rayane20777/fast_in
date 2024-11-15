@@ -1,6 +1,7 @@
 package com.fast_in.service.impl;
 
 import com.fast_in.dto.request.VehicleRequest;
+import com.fast_in.dto.response.VehicleAnalytics;
 import com.fast_in.dto.response.VehicleResponse;
 import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.mapper.VehicleMapper;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -69,5 +71,35 @@ public class VehicleServiceImpl implements VehicleService {
 //        // Check vehicle's availability
 //        return !vehicleRepository.hasConflictingReservation(vehicleId, dateTime);
         return true;
+    }
+
+    @Override
+    public VehicleAnalytics getVehicleAnalytics() {
+        // Average mileage by vehicle type
+        Map<String, Double> averageMileageByType = vehicleRepository.getAverageMileageByType();
+        averageMileageByType = averageMileageByType.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey() != null) // Filter out null keys
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        // Utilization rate by vehicle type
+        Map<String, Double> utilizationRateByType = vehicleRepository.getUtilizationRateByType();
+        utilizationRateByType = utilizationRateByType.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey() != null) // Filter out null keys
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        // Fleet status count
+        Map<String, Integer> fleetStatusCount = vehicleRepository.getFleetStatusCount();
+        fleetStatusCount = fleetStatusCount.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey() != null) // Filter out null keys
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return VehicleAnalytics.builder()
+                .averageMileageByType(averageMileageByType)
+                .utilizationRateByType(utilizationRateByType)
+                .fleetStatusCount(fleetStatusCount)
+                .build();
     }
 }
