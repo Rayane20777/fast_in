@@ -3,6 +3,7 @@ package com.fast_in.model;
 import com.fast_in.model.enums.VehicleStatus;
 import com.fast_in.model.enums.VehicleType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class Vehicle {
     @Id
     @GeneratedValue

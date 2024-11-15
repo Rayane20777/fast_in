@@ -55,13 +55,9 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle vehicle = vehicleRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle Not Found!"));
 
-        // Update the vehicle fields using the mapper
         vehicleMapper.updateEntityFromRequest(vehicleRequest, vehicle);
-        
-        // Save the updated vehicle
         return vehicleMapper.toResponse(vehicleRepository.save(vehicle));
     }
-
 
     @Override
     public boolean isAvailable(UUID vehicleId, LocalDateTime dateTime) {
