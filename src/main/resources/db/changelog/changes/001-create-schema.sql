@@ -76,3 +76,40 @@ CREATE TRIGGER update_reservation_updated_at
     BEFORE UPDATE ON reservation
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
+
+-- Create drivers table
+CREATE TABLE drivers (
+    id BIGSERIAL PRIMARY KEY,
+    last_name VARCHAR(100) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    availability_start DATE NOT NULL,
+    availability_end DATE NOT NULL
+);
+
+-- Create vehicles table
+CREATE TABLE vehicles (
+    id UUID PRIMARY KEY,
+    model VARCHAR(100) NOT NULL,
+    registration_number VARCHAR(20) UNIQUE NOT NULL,
+    mileage INTEGER NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    type VARCHAR(20) NOT NULL
+);
+
+-- Create reservations table
+CREATE TABLE reservations (
+    id BIGSERIAL PRIMARY KEY,
+    date_time TIMESTAMP NOT NULL,
+    course_start_time TIMESTAMP,
+    course_end_time TIMESTAMP,
+    departure_city VARCHAR(100) NOT NULL,
+    departure_district VARCHAR(100) NOT NULL,
+    arrival_city VARCHAR(100) NOT NULL,
+    arrival_district VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    distance_km DECIMAL(10,2) NOT NULL,
+    driver_id BIGINT REFERENCES drivers(id),
+    vehicle_id UUID REFERENCES vehicles(id)
+);

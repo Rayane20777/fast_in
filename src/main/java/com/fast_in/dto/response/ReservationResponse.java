@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "Response object containing reservation details")
 public class ReservationResponse {
-    private Long id;
-    private Long driverId;
+    private UUID id;
+    private UUID driverId;
     private UUID vehicleId;
     private LocalDateTime dateTime;
     private Address departureAddress;

@@ -28,7 +28,7 @@ public class ReservationRequest {
 
     @Schema(description = "ID of the driver assigned to this reservation")
     @NotNull(message = "Driver ID is required")
-    private Long driverId;
+    private UUID driverId;
 
     @Schema(description = "ID of the vehicle assigned to this reservation")
     @NotNull(message = "Vehicle ID is required")
@@ -55,14 +55,8 @@ public class ReservationRequest {
     @Valid
     private Address arrivalAddress;
 
-    @Schema(description = "Vehicle details")
-    @NotNull(message = "Vehicle is required")
-    @Valid
-    private Vehicle vehicle;
+    @Schema(description = "Vehicle type")
+    @NotNull(message = "Vehicle type is required")
+    private VehicleType vehicleType;
 
-    @Schema(description = "Vehicle type getter")
-    public VehicleType getVehicleType() {
-        return vehicle != null ? vehicle.getType() : null;
-    }
-    
 }

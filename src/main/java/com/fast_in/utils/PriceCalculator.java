@@ -42,11 +42,11 @@ public class PriceCalculator {
         
         switch (vehicleType) {
             case SEDAN:
-                return price;
-            case MINIBUS:
-                return price * luxuryMultiplier;
+                return price * 5.0;
             case VAN:
-                return price * 1.3;
+                return price * 7.0;
+            case MINIBUS:
+                return price * 9.0;
             default:
                 return price;
         }

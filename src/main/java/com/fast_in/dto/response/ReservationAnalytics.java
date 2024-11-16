@@ -2,10 +2,13 @@ package com.fast_in.dto.response;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Data
 @Builder
@@ -33,11 +36,13 @@ public class ReservationAnalytics {
     
     @Data
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class LocationCount {
         @Schema(description = "Location name")
         private String location;
         
         @Schema(description = "Number of reservations for this location")
-        private Long count;
+        private Integer count;
     }
 } 

@@ -20,16 +20,26 @@ import com.fast_in.exception.ReservationException;
 import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.mapper.ReservationMapper;
 import com.fast_in.model.Reservation;
+import com.fast_in.model.Vehicle;
 import com.fast_in.model.enums.ReservationStatus;
 import com.fast_in.repository.ReservationRepository;
 import com.fast_in.service.ReservationService;
 import com.fast_in.utils.PriceCalculator;
 import com.fast_in.validation.ReservationValidator;
 import com.fast_in.dto.response.ReservationAnalytics;
+import com.fast_in.repository.DriverRepository;
+import com.fast_in.repository.VehicleRepository;
+
 import java.util.Map;
+
+import com.fast_in.model.Driver;
+import com.fast_in.model.Address;
+import com.fast_in.model.enums.DriverStatus;
+import com.fast_in.model.enums.VehicleStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import static sun.security.ssl.SSLLogger.info;
 
 @Slf4j
 @Service
@@ -40,30 +50,55 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationMapper reservationMapper;
     private final ReservationValidator validator;
     private final PriceCalculator priceCalculator;
+    private final DriverRepository driverRepository;
+    private final VehicleRepository vehicleRepository;
 
-    @Override
-    @Transactional
-    public ReservationResponse createReservation(ReservationRequest request) {
-        log.info("Creating new reservation");
-        validator.validateCreation(request);
+@Override
+@Transactional
+public ReservationResponse createReservation(ReservationRequest request) {
+    log.info("Creating new reservation");
 
-        Reservation reservation = reservationMapper.toEntity(request);
-        
-        // Calculate price based on distance and vehicle type
-        double price = priceCalculator.calculatePrice(
-            request.getDistanceKm(),
-            request.getVehicle().getType(),
-            request.getDateTime()
-        );
-        reservation.setPrice(price);
-
-        Reservation savedReservation = reservationRepository.save(reservation);
-        log.info("Created reservation with ID: {}", savedReservation.getId());
-        return reservationMapper.toResponse(savedReservation);
+    // Validate availability
+    if (!checkDriverAvailability(request.getDriverId(), request.getDateTime())) {
+        throw new ReservationException("Driver is not available at the requested time");
+    }
+    if (!checkVehicleAvailability(request.getVehicleId(), request.getDateTime())) {
+        throw new ReservationException("Vehicle is not available at the requested time");
     }
 
+    // Find driver and vehicle
+    Driver driver = driverRepository.findById(request.getDriverId())
+        .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
+    Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
+        .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
+
+ // Create and populate reservation
+Reservation reservation = Reservation.builder()
+.dateTime(request.getDateTime())
+.distanceKm(request.getDistanceKm())
+.departureAddress(request.getDepartureAddress())
+.arrivalAddress(request.getArrivalAddress())
+.driver(driver)
+.vehicle(vehicle)
+.courseStartTime(request.getDateTime())  // Set initial course time
+.courseEndTime(request.getDateTime().plusHours(2))  // Assuming 2-hour duration
+.build();
+
+// Calculate price
+double price = priceCalculator.calculatePrice(
+request.getDistanceKm(),
+request.getVehicleType(),
+request.getDateTime()
+);
+reservation.setPrice(price);
+
+    // Save and return
+    Reservation savedReservation = reservationRepository.save(reservation);
+    return reservationMapper.toResponse(savedReservation);
+}
+
     @Override
-    public ReservationResponse getReservationById(Long id) {
+    public ReservationResponse getReservationById(UUID id) {
         return reservationMapper.toResponse(findReservationById(id));
     }
 
@@ -75,7 +110,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationResponse updateReservation(Long id, ReservationRequest request) {
+    public ReservationResponse updateReservation(UUID id, ReservationRequest request) {
         log.info("Updating reservation {}", id);
         validator.validateCreation(request);
 
@@ -97,7 +132,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public void deleteReservation(Long id) {
+    public void deleteReservation(UUID id) {
         Reservation reservation = findReservationById(id);
         if (reservation.getStatus() != ReservationStatus.CREATED) {
             throw new ReservationException("Can only delete reservations in CREATED status");
@@ -108,7 +143,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationResponse confirmReservation(Long id) {
+    public ReservationResponse confirmReservation(UUID id) {
         log.info("Confirming reservation {}", id);
         Reservation reservation = findReservationById(id);
         validator.validateStatusTransition(reservation, ReservationStatus.CONFIRMED);
@@ -119,7 +154,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationResponse cancelReservation(Long id) {
+    public ReservationResponse cancelReservation(UUID id) {
         log.info("Cancelling reservation {}", id);
         Reservation reservation = findReservationById(id);
         validator.validateStatusTransition(reservation, ReservationStatus.CANCELLED);
@@ -130,7 +165,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationResponse completeReservation(Long id) {
+    public ReservationResponse completeReservation(UUID id) {
         log.info("Completing reservation {}", id);
         Reservation reservation = findReservationById(id);
         validator.validateStatusTransition(reservation, ReservationStatus.COMPLETED);
@@ -189,15 +224,16 @@ public class ReservationServiceImpl implements ReservationService {
                 TreeMap::new  // Ensures ordered by hour
             ));
 
-        // Build location counts
-        List<ReservationAnalytics.LocationCount> locationCounts = reservationRepository
-            .findMostRequestedDepartureLocations()
-            .stream()
-            .map(row -> ReservationAnalytics.LocationCount.builder()
-                .location((String) row[0])
-                .count(((Number) row[1]).longValue())
-                .build())
-            .collect(Collectors.toList());
+   // Build location counts
+// Build location counts
+List<ReservationAnalytics.LocationCount> locationCounts = reservationRepository
+    .findMostRequestedDepartureLocations()
+    .stream()
+    .map(row -> ReservationAnalytics.LocationCount.builder()
+        .location((String) row[0])
+        .count(((Number) row[1]).intValue())
+        .build())
+    .collect(Collectors.toList());
 
         // Build time slot distribution
         Map<String, Integer> timeSlotDistribution = reservationRepository.getReservationsByTimeSlot()
@@ -235,34 +271,50 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public boolean checkDriverAvailability(Long driverId, LocalDateTime dateTime) {
+    public boolean checkDriverAvailability(UUID driverId, LocalDateTime dateTime) {
         log.info("Checking driver availability for ID: {} at {}", driverId, dateTime);
         
-        // Calculate time window (e.g., ±2 hours around the requested time)
+        // First check if driver exists and is available
+        Driver driver = driverRepository.findById(driverId)
+            .orElseThrow(() -> new ResourceNotFoundException("Driver not found with id: " + driverId));
+        
+        // Check if driver's status is AVAILABLE
+        if (driver.getStatus() != DriverStatus.AVAILABLE) {
+            log.info("Driver {} is not available (Status: {})", driverId, driver.getStatus());
+            return false;
+        }
+        
+        // Calculate time window (±2 hours around the requested time)
         LocalDateTime startTime = dateTime.minusHours(2);
         LocalDateTime endTime = dateTime.plusHours(2);
         
-        // Check for overlapping reservations
-        List<Reservation> overlappingReservations = reservationRepository.findOverlappingReservations(
-            driverId, startTime, endTime
-        );
-        
-        return overlappingReservations.isEmpty();
+        // Check for overlapping active reservations
+        return !reservationRepository.hasActiveReservations(driverId, startTime, endTime);
     }
 
     @Override
     public boolean checkVehicleAvailability(UUID vehicleId, LocalDateTime dateTime) {
         log.info("Checking vehicle availability for ID: {} at {}", vehicleId, dateTime);
         
-        // Calculate time window (e.g., ±2 hours around the requested time)
+        // First check if vehicle exists and is available
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+            .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found with id: " + vehicleId));
+        
+        // Check if vehicle's status is AVAILABLE
+        if (vehicle.getStatus() != VehicleStatus.AVAILABLE) {
+            log.info("Vehicle {} is not available (Status: {})", vehicleId, vehicle.getStatus());
+            return false;
+        }
+        
+        // Calculate time window (±2 hours around the requested time)
         LocalDateTime startTime = dateTime.minusHours(2);
         LocalDateTime endTime = dateTime.plusHours(2);
         
-        // Use the existing repository method
-        return !reservationRepository.hasActiveReservations(vehicleId, startTime, endTime);
+        // Check for overlapping active reservations
+        return !reservationRepository.hasVehicleActiveReservations(vehicleId, startTime, endTime);
     }
 
-    private Reservation findReservationById(Long id) {
+    private Reservation findReservationById(UUID id) {
         return reservationRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Reservation not found with id: " + id));
     }

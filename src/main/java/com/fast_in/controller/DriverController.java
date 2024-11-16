@@ -13,48 +13,101 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.fast_in.dto.request.DriverRequest;
+import com.fast_in.dto.response.DriverAnalytics;
 import com.fast_in.dto.response.DriverResponse;
+import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.service.DriverService;
 
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/drivers")
 @RequiredArgsConstructor
+@Slf4j
 public class DriverController {
     private final DriverService driverService;
 
     @GetMapping
-    public Page<DriverResponse> getAllDrivers(Pageable pageable) {
-        return driverService.findAll(pageable);
+    @Operation(summary = "Get all drivers")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Drivers retrieved successfully"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<Page<DriverResponse>> getAllDrivers(Pageable pageable) {
+        log.info("Fetching all drivers");
+        return ResponseEntity.ok(driverService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DriverResponse> getById(@PathVariable Long id) {
+    @Operation(summary = "Get driver by ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Driver retrieved successfully"),
+        @ApiResponse(responseCode = "404", description = "Driver not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<DriverResponse> getById(@PathVariable UUID id) {
+        log.info("Fetching driver with id: {}", id);
         return driverService.findById(id)
                 .map(ResponseEntity::ok)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Driver not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found with id: " + id));
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public DriverResponse create(@Valid @RequestBody DriverRequest request) {
-        return driverService.create(request);
+    @Operation(summary = "Create a new driver")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Driver created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<DriverResponse> create(@Valid @RequestBody DriverRequest request) {
+        log.info("Creating new driver");
+        return new ResponseEntity<>(driverService.create(request), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public DriverResponse update(@PathVariable Long id, @Valid @RequestBody DriverRequest request) {
-        return driverService.update(id, request);
+    @Operation(summary = "Update an existing driver")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Driver updated successfully"),
+        @ApiResponse(responseCode = "404", description = "Driver not found"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<DriverResponse> update(@PathVariable UUID id, @Valid @RequestBody DriverRequest request) {
+        log.info("Updating driver with id: {}", id);
+        return ResponseEntity.ok(driverService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    @Operation(summary = "Delete a driver")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Driver deleted successfully"),
+        @ApiResponse(responseCode = "404", description = "Driver not found"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        log.info("Deleting driver with id: {}", id);
         driverService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/analytics")
+    @Operation(summary = "Get driver analytics")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Analytics retrieved successfully"),
+        @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<DriverAnalytics> getAnalytics() {
+        log.info("Fetching driver analytics");
+        return ResponseEntity.ok(driverService.getAnalytics());
     }
 }

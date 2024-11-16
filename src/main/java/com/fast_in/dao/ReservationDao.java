@@ -15,12 +15,12 @@ import com.fast_in.model.Reservation;
 import com.fast_in.model.enums.ReservationStatus;
 
 @Repository
-public interface ReservationDao extends JpaRepository<Reservation, Long> {
+public interface ReservationDao extends JpaRepository<Reservation, UUID> {
     // Basic finder methods
     List<Reservation> findByStatus(ReservationStatus status);
     
     @Query("SELECT r FROM Reservation r WHERE r.driver.id = :driverId")
-    Page<Reservation> findByDriverId(@Param("driverId") Long driverId, Pageable pageable);
+    Page<Reservation> findByDriverId(@Param("driverId") UUID driverId, Pageable pageable);
     
     @Query("SELECT r FROM Reservation r WHERE r.vehicle.id = :vehicleId")
     Page<Reservation> findByVehicleId(@Param("vehicleId") UUID vehicleId, Pageable pageable);

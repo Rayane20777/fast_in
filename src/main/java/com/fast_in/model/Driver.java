@@ -2,11 +2,12 @@ package com.fast_in.model;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
-import com.fast_in.model.enums.DriverStatut;
+import com.fast_in.model.enums.DriverStatus;
 
 import lombok.*;
 
@@ -14,11 +15,12 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Driver {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
     
     @NotBlank(message = "Last name is required")
     private String lastName;
@@ -28,7 +30,7 @@ public class Driver {
     
     @NotNull(message = "Driver status is required")
     @Enumerated(EnumType.STRING)
-    private DriverStatut status;
+    private DriverStatus status;
 
     @NotNull(message = "Availability start is required")
     private LocalDate availabilityStart;

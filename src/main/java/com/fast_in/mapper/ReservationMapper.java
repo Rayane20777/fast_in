@@ -1,5 +1,7 @@
 package com.fast_in.mapper;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Component;
 
 import com.fast_in.dto.request.ReservationRequest;
@@ -13,20 +15,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReservationMapper {
 
+  
     public Reservation toEntity(ReservationRequest request) {
         return Reservation.builder()
             .dateTime(request.getDateTime())
             .distanceKm(request.getDistanceKm())
             .departureAddress(request.getDepartureAddress())
             .arrivalAddress(request.getArrivalAddress())
+            .courseStartTime(request.getDateTime())
+            .courseEndTime(request.getDateTime().plusHours(2))
             .status(ReservationStatus.CREATED)
+            .createdAt(LocalDateTime.now())
             .build();
     }
 
     public ReservationResponse toResponse(Reservation reservation) {
         return ReservationResponse.builder()
             .id(reservation.getId())
-            // .driverId(reservation.getDriver().getId())
+            .driverId(reservation.getDriver().getId())
             .vehicleId(reservation.getVehicle().getId())
             .dateTime(reservation.getDateTime())
             .distanceKm(reservation.getDistanceKm())

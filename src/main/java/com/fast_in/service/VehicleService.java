@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.fast_in.dto.request.VehicleRequest;
+import com.fast_in.dto.response.VehicleAnalytics;
 import com.fast_in.dto.response.VehicleResponse;
 
 public interface VehicleService {
@@ -15,4 +16,6 @@ public interface VehicleService {
     void deleteById(UUID id);
     VehicleResponse update(UUID id, VehicleRequest vehicleRequest);
     boolean isAvailable(UUID vehicleId, LocalDateTime dateTime);
+    VehicleAnalytics getVehicleAnalytics();
+
 }

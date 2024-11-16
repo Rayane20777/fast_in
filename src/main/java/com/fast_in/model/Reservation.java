@@ -1,6 +1,7 @@
 package com.fast_in.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
@@ -11,7 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 import com.fast_in.model.enums.ReservationStatus;
-// import com.fast_in.model.enums.DriverStatus;
+import com.fast_in.model.enums.DriverStatus;
 import com.fast_in.model.enums.VehicleStatus;
 
 @Entity
@@ -23,8 +24,8 @@ import com.fast_in.model.enums.VehicleStatus;
 public class Reservation {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
     @Column(name = "date_heure", nullable = false)
     @NotNull(message = "Reservation date time is required")
@@ -53,7 +54,6 @@ public class Reservation {
     })
     private Address arrivalAddress;
 
-    @NotNull(message = "Price is required")
     @DecimalMin(value = "0.0", message = "Price must be positive")
     @Column(nullable = false)
     private Double price;
@@ -96,7 +96,7 @@ public class Reservation {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        status = ReservationStatus.CREATED;
     }
 
     @PreUpdate
@@ -112,10 +112,11 @@ public class Reservation {
     }
 
     public void start() {
-        validateStatusTransition(ReservationStatus.CONFIRMED, ReservationStatus.CONFIRMED);
-        this.status = ReservationStatus.CONFIRMED;
+        if (this.status != ReservationStatus.CONFIRMED) {
+            throw new IllegalStateException("Can only start confirmed reservations");
+        }
         this.courseStartTime = LocalDateTime.now();
-        // this.driver.setStatus(DriverStatus.ONGOING);
+        this.driver.setStatus(DriverStatus.ON_TRIP);
         this.vehicle.setStatus(VehicleStatus.ONGOING);
     }
 
@@ -124,7 +125,7 @@ public class Reservation {
         this.status = ReservationStatus.COMPLETED;
         this.completedAt = LocalDateTime.now();
         this.courseEndTime = LocalDateTime.now();
-        // this.driver.setStatus(DriverStatus.AVAILABLE);
+        this.driver.setStatus(DriverStatus.AVAILABLE);
         this.vehicle.setStatus(VehicleStatus.AVAILABLE);
     }
 
@@ -134,8 +135,10 @@ public class Reservation {
         }
         this.status = ReservationStatus.CANCELLED;
         this.cancelledAt = LocalDateTime.now();
-        if (status == ReservationStatus.CONFIRMED) {
-            // this.driver.setStatus(DriverStatus.AVAILABLE);
+        if (this.driver != null) {
+            this.driver.setStatus(DriverStatus.AVAILABLE);
+        }
+        if (this.vehicle != null) {
             this.vehicle.setStatus(VehicleStatus.AVAILABLE);
         }
     }

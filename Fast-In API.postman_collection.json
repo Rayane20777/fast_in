@@ -1,0 +1,498 @@
+{
+	"info": {
+		"_postman_id": "a335ff72-d0bb-4f33-93fb-2938ee43a41f",
+		"name": "Fast-In API",
+		"description": "API collection for Fast-In Reservation and Vehicle Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39723060"
+	},
+	"item": [
+		{
+			"name": "Reservations",
+			"item": [
+				{
+					"name": "Create Reservation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"driverId\": 1,\n  \"vehicleId\": \"uuid-here\",\n  \"dateTime\": \"2024-03-25T10:00:00\",\n  \"distanceKm\": 15.5,\n  \"departureAddress\": {\n    \"street\": \"123 Start St\",\n    \"city\": \"StartCity\",\n    \"country\": \"Country\"\n  },\n  \"arrivalAddress\": {\n    \"street\": \"456 End St\",\n    \"city\": \"EndCity\",\n    \"country\": \"Country\"\n  },\n  \"vehicleType\": \"STANDARD\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/reservations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reservations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Reservation by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reservations/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reservations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Reservations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reservations?page=0&size=20&sort=dateTime",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reservations"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sort",
+									"value": "dateTime"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Reservation",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"driverId\": 1,\n  \"vehicleId\": \"uuid-here\",\n  \"dateTime\": \"2024-03-25T10:00:00\",\n  \"distanceKm\": 15.5,\n  \"departureAddress\": {\n    \"street\": \"123 Start St\",\n    \"city\": \"StartCity\",\n    \"country\": \"Country\"\n  },\n  \"arrivalAddress\": {\n    \"street\": \"456 End St\",\n    \"city\": \"EndCity\",\n    \"country\": \"Country\"\n  },\n  \"vehicleType\": \"STANDARD\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/reservations/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reservations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Reservation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reservations/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reservations",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CANCELLE Reservation",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reservations/319740b0-084b-421b-9c2c-8bb80581f701/status?status=CANCELLED",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reservations",
+								"319740b0-084b-421b-9c2c-8bb80581f701",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "CANCELLED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Analytics Reservation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/reservations/analytics",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"reservations",
+								"analytics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Vehicles",
+			"item": [
+				{
+					"name": "Get All Vehicles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vehicles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vehicles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vehicle by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vehicles/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vehicles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Vehicle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"model\": \"Toyota Camry\",\r\n    \"registrationNumber\": \"ABC123XY\",\r\n    \"mileage\": 50000,\r\n    \"status\": \"AVAILABLE\",\r\n    \"type\": \"SEDAN\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/vehicles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vehicles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Vehicle",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"model\":\"Toyota Camry\",\"registrationNumber\":\"ABC123XY\",\"mileage\":50000,\"status\":\"AVAILABLE\",\"type\":\"STANDARD\"}"
+						},
+						"url": {
+							"raw": "{{base_url}}/vehicles/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vehicles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Vehicle",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vehicles/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vehicles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Vehicle Analytics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/vehicles/analytics",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"vehicles",
+								"analytics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Drivers",
+			"item": [
+				{
+					"name": "Get All Drivers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/drivers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"drivers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Driver by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/drivers/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"drivers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Driver",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"status\": \"AVAILABLE\",\n  \"availabilityStart\": \"2024-03-25\",\n  \"availabilityEnd\": \"2024-12-31\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/drivers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"drivers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Driver",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"status\": \"AVAILABLE\",\n  \"availabilityStart\": \"2024-03-25\",\n  \"availabilityEnd\": \"2024-12-31\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/drivers/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"drivers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Driver",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/drivers/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"drivers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Driver Analytics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/drivers/analytics",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"drivers",
+								"analytics"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8081/api/v1",
+			"type": "string"
+		}
+	]
+}

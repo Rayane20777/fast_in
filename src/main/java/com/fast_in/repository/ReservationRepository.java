@@ -15,30 +15,36 @@ import com.fast_in.model.Reservation;
 import com.fast_in.model.enums.ReservationStatus;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationRepository extends JpaRepository<Reservation, UUID> {
     
     Page<Reservation> findByStatus(ReservationStatus status, Pageable pageable);
     
-    @Query("SELECT r FROM Reservation r WHERE r.driver.id = :driverId AND " +
-           "r.status NOT IN ('COMPLETED', 'CANCELLED') AND " +
-           "((r.dateTime BETWEEN :startTime AND :endTime) OR " +
-           "(r.courseEndTime BETWEEN :startTime AND :endTime))")
-    List<Reservation> findOverlappingReservations(
-        @Param("driverId") Long driverId,
-        @Param("startTime") LocalDateTime startTime,
-        @Param("endTime") LocalDateTime endTime
-    );
+    @Query("SELECT r FROM Reservation r WHERE r.driver.id = :driverId")
+    Page<Reservation> findByDriverId(@Param("driverId") UUID driverId, Pageable pageable);
     
-    @Query("SELECT CASE WHEN COUNT(r) > 0 THEN true ELSE false END FROM Reservation r " +
-           "WHERE r.vehicle.id = :vehicleId AND r.status NOT IN ('COMPLETED', 'CANCELLED') AND " +
-           "((r.dateTime BETWEEN :startTime AND :endTime) OR " +
-           "(r.courseEndTime BETWEEN :startTime AND :endTime))")
-    boolean hasActiveReservations(
-        @Param("vehicleId") UUID vehicleId,
-        @Param("startTime") LocalDateTime startTime,
-        @Param("endTime") LocalDateTime endTime
+    @Query("SELECT r FROM Reservation r WHERE r.vehicle.id = :vehicleId")
+    Page<Reservation> findByVehicleId(@Param("vehicleId") UUID vehicleId, Pageable pageable);
+
+    // Availability check queries
+    @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
+           "WHERE r.driver.id = :driverId " +
+           "AND r.status NOT IN ('COMPLETED', 'CANCELLED') " +
+           "AND :dateTime BETWEEN r.dateTime AND r.courseEndTime")
+    boolean hasDriverConflictingReservation(
+        @Param("driverId") UUID driverId, 
+        @Param("dateTime") LocalDateTime dateTime
     );
-    
+
+    @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
+           "WHERE r.vehicle.id = :vehicleId " +
+           "AND r.status NOT IN ('COMPLETED', 'CANCELLED') " +
+           "AND :dateTime BETWEEN r.dateTime AND r.courseEndTime")
+    boolean hasVehicleConflictingReservation(
+        @Param("vehicleId") UUID vehicleId, 
+        @Param("dateTime") LocalDateTime dateTime
+    );
+
+    // Analytics queries
     @Query("SELECT AVG(r.price / r.distanceKm) FROM Reservation r WHERE r.status = 'COMPLETED'")
     Double calculateAveragePricePerKm();
     
@@ -67,4 +73,42 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r.vehicle.type, AVG(r.price / r.distanceKm) FROM Reservation r " +
            "WHERE r.status = 'COMPLETED' GROUP BY r.vehicle.type")
     List<Object[]> getAveragePricePerKmByVehicleType();
+    
+    @Query("SELECT r.vehicle.type as type, COUNT(r) as count FROM Reservation r " +
+           "GROUP BY r.vehicle.type")
+    List<Object[]> getReservationsByVehicleType();
+
+    // Overlapping reservations check
+    @Query("SELECT r FROM Reservation r " +
+           "WHERE r.driver.id = :driverId " +
+           "AND r.status NOT IN ('COMPLETED', 'CANCELLED') " +
+           "AND ((r.dateTime BETWEEN :startTime AND :endTime) OR " +
+           "(r.courseEndTime BETWEEN :startTime AND :endTime))")
+    List<Reservation> findOverlappingReservations(
+        @Param("driverId") UUID driverId,
+        @Param("startTime") LocalDateTime startTime,
+        @Param("endTime") LocalDateTime endTime
+    );
+
+    @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
+           "WHERE r.driver.id = :driverId " +
+           "AND r.status NOT IN ('COMPLETED', 'CANCELLED') " +
+           "AND ((r.dateTime BETWEEN :startTime AND :endTime) OR " +
+           "(r.courseEndTime BETWEEN :startTime AND :endTime))")
+    boolean hasActiveReservations(
+        @Param("driverId") UUID driverId,
+        @Param("startTime") LocalDateTime startTime,
+        @Param("endTime") LocalDateTime endTime
+    );
+
+    @Query("SELECT COUNT(r) > 0 FROM Reservation r " +
+           "WHERE r.vehicle.id = :vehicleId " +
+           "AND r.status NOT IN ('COMPLETED', 'CANCELLED') " +
+           "AND ((r.dateTime BETWEEN :startTime AND :endTime) OR " +
+           "(r.courseEndTime BETWEEN :startTime AND :endTime))")
+    boolean hasVehicleActiveReservations(
+        @Param("vehicleId") UUID vehicleId,
+        @Param("startTime") LocalDateTime startTime,
+        @Param("endTime") LocalDateTime endTime
+    );
 }

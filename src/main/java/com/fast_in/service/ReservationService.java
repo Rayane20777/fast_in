@@ -14,15 +14,15 @@ import com.fast_in.dto.response.ReservationAnalytics;
 public interface ReservationService {
     // CRUD operations
     ReservationResponse createReservation(ReservationRequest request);
-    ReservationResponse getReservationById(Long id);
+    ReservationResponse getReservationById(UUID id);
     Page<ReservationResponse> getAllReservations(Pageable pageable);
-    ReservationResponse updateReservation(Long id, ReservationRequest request);
-    void deleteReservation(Long id);
+    ReservationResponse updateReservation(UUID id, ReservationRequest request);
+    void deleteReservation(UUID id);
     
     // Status management
-    ReservationResponse confirmReservation(Long id);
-    ReservationResponse cancelReservation(Long id);
-    ReservationResponse completeReservation(Long id);
+    ReservationResponse confirmReservation(UUID id);
+    ReservationResponse cancelReservation(UUID id);
+    ReservationResponse completeReservation(UUID id);
     
     // Analytics methods as specified in requirements
     Double getAveragePricePerKm();
@@ -31,7 +31,7 @@ public interface ReservationService {
     Map<String, Integer> getMostRequestedDepartureLocations();
     ReservationAnalytics getAnalytics();
 
-    boolean checkDriverAvailability(Long driverId, LocalDateTime dateTime);
+    boolean checkDriverAvailability(UUID driverId, LocalDateTime dateTime);
     boolean checkVehicleAvailability(UUID vehicleId, LocalDateTime dateTime);
 
 

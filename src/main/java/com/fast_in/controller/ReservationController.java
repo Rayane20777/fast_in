@@ -22,10 +22,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fast_in.dto.request.ReservationRequest;
 import com.fast_in.dto.response.ReservationAnalytics;
 import com.fast_in.dto.response.ReservationResponse;
+import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.model.enums.ReservationStatus;
 import com.fast_in.service.ReservationService;
 
@@ -68,7 +70,7 @@ public class ReservationController {
     })
     public ResponseEntity<ReservationResponse> getReservation(
             @Parameter(description = "ID of the reservation", required = true)
-            @PathVariable Long id) {
+            @PathVariable UUID id) {
         log.info("Fetching reservation with id: {}", id);
         return ResponseEntity.ok(reservationService.getReservationById(id));
     }
@@ -90,7 +92,7 @@ public class ReservationController {
         @ApiResponse(responseCode = "404", description = "Reservation not found")
     })
     public ResponseEntity<ReservationResponse> updateReservation(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             @Valid @RequestBody ReservationRequest request) {
         log.info("Updating reservation with id: {}", id);
         return ResponseEntity.ok(reservationService.updateReservation(id, request));
@@ -102,57 +104,74 @@ public class ReservationController {
         @ApiResponse(responseCode = "204", description = "Reservation deleted"),
         @ApiResponse(responseCode = "404", description = "Reservation not found")
     })
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable UUID id) {
         log.info("Deleting reservation with id: {}", id);
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/status")
-    @Operation(summary = "Update reservation status")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Status updated"),
+@PatchMapping("/{id}/status")
+@Operation(summary = "Update reservation status")
+@ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Status updated"),
     @ApiResponse(responseCode = "400", description = "Invalid status transition"),
     @ApiResponse(responseCode = "404", description = "Reservation not found")
 })
 public ResponseEntity<ReservationResponse> updateStatus(
-        @PathVariable Long id,
+        @PathVariable UUID id,
         @RequestParam ReservationStatus status) {
-    log.info("Updating status of reservation {} to {}", id, status);
-    ReservationResponse response;
-    switch (status) {
-        case CONFIRMED:
-            response = reservationService.confirmReservation(id);
-            break;
-        case CANCELLED:
-            response = reservationService.cancelReservation(id);
-            break;
-        case COMPLETED:
-            response = reservationService.completeReservation(id);
-            break;
-        default:
-            throw new IllegalArgumentException("Invalid status: " + status);
+    log.info("Updating reservation {} status to {}", id, status);
+    
+    try {
+        ReservationResponse response;
+        switch (status) {
+            case CONFIRMED:
+                response = reservationService.confirmReservation(id);
+                break;
+            case CANCELLED:
+                response = reservationService.cancelReservation(id);
+                break;
+            case COMPLETED:
+                response = reservationService.completeReservation(id);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid status update request. Status: " + status);
+        }
+        return ResponseEntity.ok(response);
+    } catch (ResourceNotFoundException e) {
+        log.error("Reservation not found: {}", e.getMessage());
+        throw e;
+    } catch (IllegalStateException e) {
+        log.error("Invalid status transition: {}", e.getMessage());
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
-    return ResponseEntity.ok(response);
 }
 
-    @GetMapping("/analytics")
-    @Operation(summary = "Get reservation analytics")
-    @ApiResponse(responseCode = "200", description = "Analytics data retrieved")
-    public ResponseEntity<ReservationAnalytics> getAnalytics() {
-        log.info("Fetching reservation analytics");
-        return ResponseEntity.ok(reservationService.getAnalytics());
-    }
+@GetMapping("/analytics")
+@Operation(summary = "Get reservation analytics")
+@ApiResponse(responseCode = "200", description = "Analytics data retrieved")
+public ResponseEntity<ReservationAnalytics> getAnalytics() {
+    log.info("Fetching reservation analytics");
+    return ResponseEntity.ok(reservationService.getAnalytics());
+}
 
     @GetMapping("/check/driver")
     @Operation(summary = "Check driver availability")
     public ResponseEntity<Boolean> checkDriverAvailability(
             @Parameter(description = "Driver ID", required = true)
-            @RequestParam Long driverId,
+            @RequestParam UUID driverId,
             @Parameter(description = "Check date and time", required = true)
             @RequestParam @FutureOrPresent LocalDateTime dateTime) {
-        log.info("Checking availability for driver {} at {}", driverId, dateTime);
-        return ResponseEntity.ok(reservationService.checkDriverAvailability(driverId, dateTime));
+        try {
+            log.info("Checking availability for driver {} at {}", driverId, dateTime);
+            return ResponseEntity.ok(reservationService.checkDriverAvailability(driverId, dateTime));
+        } catch (ResourceNotFoundException e) {
+            log.error("Driver not found: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Error checking driver availability: {}", e.getMessage());
+            throw new RuntimeException("Error checking driver availability", e);
+        }
     }
 
     @GetMapping("/check/vehicle")
@@ -162,7 +181,15 @@ public ResponseEntity<ReservationResponse> updateStatus(
             @RequestParam UUID vehicleId,
             @Parameter(description = "Check date and time", required = true)
             @RequestParam @FutureOrPresent LocalDateTime dateTime) {
-        log.info("Checking availability for vehicle {} at {}", vehicleId, dateTime);
-        return ResponseEntity.ok(reservationService.checkVehicleAvailability(vehicleId, dateTime));
+        try {
+            log.info("Checking availability for vehicle {} at {}", vehicleId, dateTime);
+            return ResponseEntity.ok(reservationService.checkVehicleAvailability(vehicleId, dateTime));
+        } catch (ResourceNotFoundException e) {
+            log.error("Vehicle not found: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Error checking vehicle availability: {}", e.getMessage());
+            throw new RuntimeException("Error checking vehicle availability", e);
+        }
     }
 }
