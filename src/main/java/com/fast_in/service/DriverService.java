@@ -5,6 +5,7 @@ import com.fast_in.dto.response.DriverResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
+import java.util.Map;
 
 public interface DriverService {
     Page<DriverResponse> findAll(Pageable pageable);
@@ -12,4 +13,5 @@ public interface DriverService {
     DriverResponse create(DriverRequest request);
     DriverResponse update(Long id, DriverRequest request);
     void deleteById(Long id);
+    Map<String, Object> getDriverAnalytics();
 }
