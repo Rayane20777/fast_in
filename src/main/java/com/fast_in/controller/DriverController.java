@@ -1,5 +1,7 @@
 package com.fast_in.controller;
 
+import java.util.UUID;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -21,17 +23,13 @@ import com.fast_in.dto.response.DriverResponse;
 import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.service.DriverService;
 
-import java.util.UUID;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/drivers")
 @RequestMapping("/drivers")
 @RequiredArgsConstructor
 @Slf4j

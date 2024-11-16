@@ -2,12 +2,14 @@ package com.fast_in.service.impl;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fast_in.dao.DriverDao;
 import com.fast_in.dto.request.DriverRequest;
 import com.fast_in.dto.response.DriverAnalytics;
 import com.fast_in.dto.response.DriverResponse;
@@ -16,7 +18,7 @@ import com.fast_in.mapper.DriverMapper;
 import com.fast_in.model.Driver;
 import com.fast_in.repository.DriverRepository;
 import com.fast_in.service.DriverService;
-import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
