@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class DriverServiceImpl implements DriverService {
     private final DriverRepository driverRepository;
     private final DriverMapper driverMapper;
+    private final DriverDao driverDao;
 
     @Override
     public Page<DriverResponse> findAll(Pageable pageable) {

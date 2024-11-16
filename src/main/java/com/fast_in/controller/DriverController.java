@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/drivers")
+@RequestMapping("/drivers")
 @RequiredArgsConstructor
 @Slf4j
 public class DriverController {

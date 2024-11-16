@@ -1,11 +1,12 @@
 package com.fast_in.mapper;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import com.fast_in.dto.request.VehicleRequest;
 import com.fast_in.dto.response.VehicleResponse;
 import com.fast_in.model.Vehicle;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
