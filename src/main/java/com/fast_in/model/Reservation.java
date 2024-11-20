@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 import com.fast_in.model.enums.ReservationStatus;
+import com.fast_in.exception.PromoCodeException;
 import com.fast_in.model.enums.DriverStatus;
 import com.fast_in.model.enums.VehicleStatus;
 
@@ -77,6 +78,9 @@ public class Reservation {
     @JoinColumn(name = "vehicle_id", nullable = false)
     @NotNull(message = "Vehicle is required")
     private Vehicle vehicle;
+
+    @Column(name = "promocode")
+    private String promoCode;
 
     @Column(name = "confirmed_at")
     private LocalDateTime confirmedAt;
@@ -151,4 +155,31 @@ public class Reservation {
             );
         }
     }
+
+    private double applyPromoCode() {
+        if (promoCode == null || promoCode.isEmpty()) {
+            return this.price;
+        }
+        
+        if (!isValidPromoFormat(promoCode)) {
+            throw new PromoCodeException("Invalid promo code format");
+        }
+        
+        int discount = extractDiscountPercentage(promoCode);
+        if (discount <= 0 || discount >= 50) {
+            throw new PromoCodeException("Invalid discount percentage");
+        }
+        
+        return price - (price * discount / 100.0);
+    }
+    
+    private boolean isValidPromoFormat(String code) {
+        return code.matches("PRO-TAXI-\\d{1,2}");
+    }
+    
+    private int extractDiscountPercentage(String code) {
+        return Integer.parseInt(code.substring(code.lastIndexOf("-") + 1));
+    }
+
+        
 }

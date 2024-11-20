@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "a335ff72-d0bb-4f33-93fb-2938ee43a41f",
+		"_postman_id": "cbd09e1e-e4a8-40e2-ae78-eace9e517c1c",
 		"name": "Fast-In API",
 		"description": "API collection for Fast-In Reservation and Vehicle Management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39723060"
+		"_exporter_id": "39337770"
 	},
 	"item": [
 		{
@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"driverId\": 1,\n  \"vehicleId\": \"uuid-here\",\n  \"dateTime\": \"2024-03-25T10:00:00\",\n  \"distanceKm\": 15.5,\n  \"departureAddress\": {\n    \"street\": \"123 Start St\",\n    \"city\": \"StartCity\",\n    \"country\": \"Country\"\n  },\n  \"arrivalAddress\": {\n    \"street\": \"456 End St\",\n    \"city\": \"EndCity\",\n    \"country\": \"Country\"\n  },\n  \"vehicleType\": \"STANDARD\"\n}"
+							"raw": "{\n  \"driverId\": \"e9ef9906-2575-48b9-a83d-55e848cb459e\",\n  \"vehicleId\": \"85b31cbe-7d30-49e9-8f30-0b235b20b55e\",\n  \"dateTime\": \"2025-11-19T10:00:00\",\n  \"distanceKm\": 50.0,\n  \"departureAddress\": {\n    \"ville\": \"City Name\",\n    \"quartier\": \"District Name\"\n  },\n  \"arrivalAddress\": {\n    \"ville\": \"Destination City\",\n    \"quartier\": \"Destination District\"\n  },\n  \"vehicleType\": \"SEDAN\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/reservations",
@@ -42,19 +42,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/reservations/:id",
+							"raw": "{{base_url}}/reservations/262efdf4-c20e-43bb-9575-b8bc3fced2ed",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"reservations",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
+								"262efdf4-c20e-43bb-9575-b8bc3fced2ed"
 							]
 						}
 					},
@@ -103,22 +97,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"driverId\": 1,\n  \"vehicleId\": \"uuid-here\",\n  \"dateTime\": \"2024-03-25T10:00:00\",\n  \"distanceKm\": 15.5,\n  \"departureAddress\": {\n    \"street\": \"123 Start St\",\n    \"city\": \"StartCity\",\n    \"country\": \"Country\"\n  },\n  \"arrivalAddress\": {\n    \"street\": \"456 End St\",\n    \"city\": \"EndCity\",\n    \"country\": \"Country\"\n  },\n  \"vehicleType\": \"STANDARD\"\n}"
+							"raw": "{\n    \"driverId\": \"e9ef9906-2575-48b9-a83d-55e848cb459e\",\n    \"vehicleId\": \"85b31cbe-7d30-49e9-8f30-0b235b20b55e\",\n  \"dateTime\": \"2025-11-19T10:00:00\",\n  \"distanceKm\": 50.0,\n  \"departureAddress\": {\n    \"ville\": \"City Name 1\",\n    \"quartier\": \"District Name 1\"\n  },\n  \"arrivalAddress\": {\n    \"ville\": \"Destination City\",\n    \"quartier\": \"Destination District\"\n  },\n  \"vehicleType\": \"SEDAN\"\n}"
 						},
 						"url": {
-							"raw": "{{base_url}}/reservations/:id",
+							"raw": "{{base_url}}/reservations/28f705e4-6927-4f6f-9f16-b12f2fad9db1",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"reservations",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
+								"28f705e4-6927-4f6f-9f16-b12f2fad9db1"
 							]
 						}
 					},
@@ -219,19 +207,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/vehicles/:id",
+							"raw": "{{base_url}}/vehicles/adc00963-5dd7-4eaa-bfda-0a30daf05514",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"vehicles",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
+								"adc00963-5dd7-4eaa-bfda-0a30daf05514"
 							]
 						}
 					},
@@ -249,7 +231,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"model\": \"Toyota Camry\",\r\n    \"registrationNumber\": \"ABC123XY\",\r\n    \"mileage\": 50000,\r\n    \"status\": \"AVAILABLE\",\r\n    \"type\": \"SEDAN\"\r\n}"
+							"raw": "{\r\n    \"model\": \"Toyota Camry 1\",\r\n    \"registrationNumber\": \"12345-A-12\",\r\n    \"mileage\": 50000,\r\n    \"status\": \"AVAILABLE\",\r\n    \"type\": \"SEDAN\"\r\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/vehicles",
@@ -275,22 +257,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"model\":\"Toyota Camry\",\"registrationNumber\":\"ABC123XY\",\"mileage\":50000,\"status\":\"AVAILABLE\",\"type\":\"STANDARD\"}"
+							"raw": "{\r\n    \"model\": \"Toyota Camry\",\r\n    \"registrationNumber\": \"12345-A-12\",\r\n    \"mileage\": 50000,\r\n    \"status\": \"ONGOING\",\r\n    \"type\": \"MINIBUS\"\r\n}"
 						},
 						"url": {
-							"raw": "{{base_url}}/vehicles/:id",
+							"raw": "{{base_url}}/vehicles/adc00963-5dd7-4eaa-bfda-0a30daf05514",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"vehicles",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
+								"adc00963-5dd7-4eaa-bfda-0a30daf05514"
 							]
 						}
 					},
@@ -366,19 +342,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/drivers/:id",
+							"raw": "{{base_url}}/drivers/88b268c7-a04f-4d24-ac1c-049cbddd523f",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"drivers",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
+								"88b268c7-a04f-4d24-ac1c-049cbddd523f"
 							]
 						}
 					},
@@ -396,7 +366,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"status\": \"AVAILABLE\",\n  \"availabilityStart\": \"2024-03-25\",\n  \"availabilityEnd\": \"2024-12-31\"\n}"
+							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"status\": \"AVAILABLE\",\n  \"availabilityStart\": \"2024-11-25\",\n  \"availabilityEnd\": \"2025-12-31\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/drivers",
@@ -422,22 +392,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"status\": \"AVAILABLE\",\n  \"availabilityStart\": \"2024-03-25\",\n  \"availabilityEnd\": \"2024-12-31\"\n}"
+							"raw": "{\n  \"firstName\": \"John 1\",\n  \"lastName\": \"Doe\",\n  \"status\": \"AVAILABLE\",\n  \"availabilityStart\": \"2024-11-25\",\n  \"availabilityEnd\": \"2025-12-31\"\n}"
 						},
 						"url": {
-							"raw": "{{base_url}}/drivers/:id",
+							"raw": "{{base_url}}/drivers/88b268c7-a04f-4d24-ac1c-049cbddd523f",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"drivers",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
+								"88b268c7-a04f-4d24-ac1c-049cbddd523f"
 							]
 						}
 					},

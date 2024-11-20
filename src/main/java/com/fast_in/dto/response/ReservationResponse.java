@@ -25,6 +25,7 @@ public class ReservationResponse {
     private Address departureAddress;
     private Address arrivalAddress;
     private Double price;
+    private String promoCode;
     private Double distanceKm;
     private ReservationStatus status;
     private LocalDateTime courseStartTime;

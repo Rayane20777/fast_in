@@ -1,6 +1,7 @@
 package com.fast_in.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -28,6 +29,7 @@ import com.fast_in.dto.request.ReservationRequest;
 import com.fast_in.dto.response.ReservationAnalytics;
 import com.fast_in.dto.response.ReservationResponse;
 import com.fast_in.exception.ResourceNotFoundException;
+import com.fast_in.model.Reservation;
 import com.fast_in.model.enums.ReservationStatus;
 import com.fast_in.service.ReservationService;
 
@@ -192,4 +194,10 @@ public ResponseEntity<ReservationAnalytics> getAnalytics() {
             throw new RuntimeException("Error checking vehicle availability", e);
         }
     }
+
+       @GetMapping("/promos")
+    public ResponseEntity<List<Reservation>> getReservationsWithPromo() {
+        return ResponseEntity.ok(reservationService.findAllWithValidPromoCode());
+    }
+
 }

@@ -1,45 +1,40 @@
 package com.fast_in.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.TreeMap;
-import java.util.LinkedHashMap;
-import java.util.HashMap;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fast_in.dao.ReservationDao;
 import com.fast_in.dto.request.ReservationRequest;
+import com.fast_in.dto.response.ReservationAnalytics;
 import com.fast_in.dto.response.ReservationResponse;
 import com.fast_in.exception.ReservationException;
 import com.fast_in.exception.ResourceNotFoundException;
 import com.fast_in.mapper.ReservationMapper;
+import com.fast_in.model.Driver;
 import com.fast_in.model.Reservation;
 import com.fast_in.model.Vehicle;
+import com.fast_in.model.enums.DriverStatus;
 import com.fast_in.model.enums.ReservationStatus;
+import com.fast_in.model.enums.VehicleStatus;
+import com.fast_in.repository.DriverRepository;
 import com.fast_in.repository.ReservationRepository;
+import com.fast_in.repository.VehicleRepository;
 import com.fast_in.service.ReservationService;
 import com.fast_in.utils.PriceCalculator;
 import com.fast_in.validation.ReservationValidator;
-import com.fast_in.dto.response.ReservationAnalytics;
-import com.fast_in.repository.DriverRepository;
-import com.fast_in.repository.VehicleRepository;
-
-import java.util.Map;
-
-import com.fast_in.model.Driver;
-import com.fast_in.model.Address;
-import com.fast_in.model.enums.DriverStatus;
-import com.fast_in.model.enums.VehicleStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import static sun.security.ssl.SSLLogger.info;
 
 @Slf4j
 @Service
@@ -115,7 +110,12 @@ reservation.setPrice(price);
         validator.validateCreation(request);
 
         Reservation reservation = findReservationById(id);
-        validator.validateStatusTransition(reservation, ReservationStatus.CREATED);
+
+        // Check if the status needs to be updated
+        if (request.getStatus() != null && request.getStatus() != reservation.getStatus()) {
+            validator.validateStatusTransition(reservation, request.getStatus());
+            reservation.setStatus(request.getStatus());
+        }
 
         reservationMapper.updateEntityFromRequest(reservation, request);
 
@@ -317,5 +317,10 @@ List<ReservationAnalytics.LocationCount> locationCounts = reservationRepository
     private Reservation findReservationById(UUID id) {
         return reservationRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Reservation not found with id: " + id));
+    }
+    public List<Reservation> findAllWithValidPromoCode() {
+        return reservationRepository.findAll().stream()
+            .filter(r -> r.getPromoCode() != null && !r.getPromoCode().isEmpty())
+            .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,7 @@
 package com.fast_in.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.fast_in.dto.request.ReservationRequest;
 import com.fast_in.dto.response.ReservationResponse;
+import com.fast_in.model.Reservation;
 import com.fast_in.dto.response.ReservationAnalytics;
 
 public interface ReservationService {
@@ -34,5 +36,6 @@ public interface ReservationService {
     boolean checkDriverAvailability(UUID driverId, LocalDateTime dateTime);
     boolean checkVehicleAvailability(UUID vehicleId, LocalDateTime dateTime);
 
+    List<Reservation> findAllWithValidPromoCode();
 
 }

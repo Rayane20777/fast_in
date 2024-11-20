@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import com.fast_in.model.Address;
 import com.fast_in.model.Vehicle;
 import com.fast_in.model.enums.VehicleType;
+import com.fast_in.model.enums.ReservationStatus;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -59,4 +60,13 @@ public class ReservationRequest {
     @NotNull(message = "Vehicle type is required")
     private VehicleType vehicleType;
 
+    @Schema(description = "Promo code")
+    private String promoCode;
+
+    @Schema(description = "Reservation status")
+    private ReservationStatus status;
+
+    public ReservationStatus getStatus() {
+        return status;
+    }
 }
